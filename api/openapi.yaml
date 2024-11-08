@@ -1,0 +1,794 @@
+openapi: 3.0.0
+info:
+  title: ServEase
+  description: ""
+  version: "1.0"
+servers:
+- url: /
+paths:
+  /services:
+    get:
+      tags:
+      - services
+      summary: Search for services by name and filters
+      description: "FR-1 The guest must be able to search for services, FR-2 The guest\
+        \ must be able to filter his search for services"
+      operationId: searchServices
+      parameters:
+      - name: search
+        in: query
+        description: Name of the service to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: typeFilter
+        in: query
+        description: Type of service to search by
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: locationFilter
+        in: query
+        description: Name of the city that the service is located in
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: ratingFilter
+        in: query
+        description: Minimum rating of the service to search for.
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 5
+          minimum: 1
+          type: integer
+      responses:
+        "200":
+          description: A list of services matching the search query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+                x-content-type: application/json
+        "204":
+          description: "No services found matching the search query, normal, no error\
+            \ condition"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Services
+    post:
+      tags:
+      - services
+      summary: Create a professional account - service
+      description: A professional account is created
+      operationId: createService
+      requestBody:
+        $ref: '#/components/requestBodies/NewServiceRequestBody'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Services
+  /services/{serviceId}:
+    get:
+      tags:
+      - services
+      summary: Get a service
+      description: "FR-5 The client must be able to access a service's information,\
+        \ FR-9 The professional must be able to edit his service's information"
+      operationId: getService
+      parameters:
+      - name: serviceId
+        in: path
+        description: The service's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        "404":
+          description: "No service found matching this serviceId, error condition."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Services
+    put:
+      tags:
+      - services
+      summary: Edit a service
+      description: FR-9 The professional must be able to edit his service's information
+      operationId: editService
+      parameters:
+      - name: serviceId
+        in: path
+        description: The service's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ServiceRequestBody'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        "404":
+          description: "No service found matching this serviceId, error condition."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Services
+    delete:
+      tags:
+      - services
+      summary: Delete a service.
+      description: Delete a service by service id.
+      operationId: deleteService
+      parameters:
+      - name: serviceId
+        in: path
+        description: ID of the service to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: "No service found matching this serviceId, error condition."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Services
+  /clients:
+    post:
+      tags:
+      - clients
+      summary: Create a personal account - client
+      description: A personal account is created
+      operationId: createClient
+      requestBody:
+        $ref: '#/components/requestBodies/NewClientRequestBody'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Clients
+  /clients/{clientId}:
+    get:
+      tags:
+      - clients
+      summary: Get a client
+      description: FR-4 The client must be able to edit his personal information
+      operationId: getClient
+      parameters:
+      - name: clientId
+        in: path
+        description: The client's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        "404":
+          description: "No client found matching this clientId, error condition."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Clients
+    put:
+      tags:
+      - clients
+      summary: Edit a client
+      description: FR-4 The client must be able to edit his personal information
+      operationId: editClient
+      parameters:
+      - name: clientId
+        in: path
+        description: The client's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ClientRequestBody'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        "404":
+          description: "No client found matching this clientId, error condition."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Clients
+    delete:
+      tags:
+      - clients
+      summary: Delete a client
+      description: Delete a client by client id.
+      operationId: deleteClient
+      parameters:
+      - name: clientId
+        in: path
+        description: ID of the client to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: "No client found matching this clientId, error condition."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Clients
+  /appointments:
+    get:
+      tags:
+      - appointments
+      summary: Get the appointments of a client or a service
+      description: "FR-8 The client must be able to view his appointments, FR-10 The\
+        \ professional must be able to manage his appointment applications"
+      operationId: getClientAppointments
+      parameters:
+      - name: clientId
+        in: query
+        description: The client's id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: serviceId
+        in: query
+        description: The service's id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: A list of appointments for this serviceId or clientId
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appointment'
+                x-content-type: application/json
+        "204":
+          description: "No appointments found for this serviceId or clientId, normal,\
+            \ no error condition"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Appointments
+    post:
+      tags:
+      - appointments
+      summary: Create an appointment
+      description: FR-3 The client must be able to apply for an appointment at a service
+      operationId: createAppointment
+      requestBody:
+        $ref: '#/components/requestBodies/NewAppointmentRequestBody'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Appointments
+  /appointments/{appointmentId}:
+    get:
+      tags:
+      - appointments
+      summary: Get an appointment by Id
+      description: No matching FR
+      operationId: getAppointment
+      parameters:
+      - name: appointmentId
+        in: path
+        description: The appointment's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        "404":
+          description: "No appointment found matching this appointmentId, error condition."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Appointments
+    put:
+      tags:
+      - appointments
+      summary: Edit an appointment
+      description: "FR-10 The professional must be able to manage his appointment\
+        \ applications, FR-7 The client must be able to cancel his appointment"
+      operationId: editServiceAppointment
+      parameters:
+      - name: appointmentId
+        in: path
+        description: The appointment's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/AppointmentRequestBody'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Appointments
+  /service/{serviceId}/ratings:
+    get:
+      tags:
+      - ratings
+      summary: Get the ratings of a service
+      description: "FR-5 The client must be able to access a service's information,\
+        \ FR-9 The professional must be able to edit his service's information"
+      operationId: getServiceRatings
+      parameters:
+      - name: serviceId
+        in: path
+        description: The service's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: A list of ratings for this service
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rating'
+                x-content-type: application/json
+        "204":
+          description: "No ratings found for this service, normal, no error condition"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Ratings
+    post:
+      tags:
+      - ratings
+      summary: Create a rating
+      description: FR-6 The client must be able to rate a service
+      operationId: createRating
+      parameters:
+      - name: serviceId
+        in: path
+        description: The service's id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/RatingRequestBody'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: Ratings
+components:
+  schemas:
+    NewService:
+      required:
+      - address
+      - availableTimeSlots
+      - city
+      - country
+      - description
+      - email
+      - phone
+      - postalCode
+      - rating
+      - serviceImg
+      - serviceType
+      - userType
+      type: object
+      properties:
+        userType:
+          type: string
+          description: The type of user. For the Service it always has value "service"
+          enum:
+          - client
+          - guest
+          - service
+        serviceType:
+          type: string
+          description: "The type of each service, (doctor etc)"
+        description:
+          maximum: 300
+          type: string
+          description: "A brief explanation of the service, with a maximum of 300\
+            \ characters."
+        city:
+          type: string
+          description: The city that the service is located in.
+        address:
+          minimum: 2
+          type: string
+          description: The address of the service that has a minimum of 2 characters.
+        country:
+          type: string
+          description: The country that the service is located in.
+        postalCode:
+          type: integer
+          description: The postal code of the service.
+        availableTimeSlots:
+          type: array
+          description: The time slots of this service that are available for a client
+            to book an appointment.
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+        phone:
+          maximum: 10
+          type: string
+          description: "The phone number of the service, that has a maximum of 10\
+            \ characters."
+        email:
+          type: string
+          description: "The email of the service, must always have a \"@\" and can't\
+            \ be modified."
+        rating:
+          maximum: 5
+          minimum: 1
+          type: number
+          description: The rating that the service currently holds
+        serviceImg:
+          type: string
+          description: Binary data representing the image file.
+          format: binary
+    Service:
+      allOf:
+      - $ref: '#/components/schemas/NewService'
+      - required:
+        - serviceId
+        type: object
+        properties:
+          serviceId:
+            type: integer
+            description: The identification number of the service
+    NewClient:
+      required:
+      - personalInfo
+      - userType
+      type: object
+      properties:
+        userType:
+          type: string
+          description: The type of user. For the Client it always has value "client"
+          enum:
+          - client
+          - guest
+          - service
+        personalInfo:
+          type: array
+          description: Contains all the personal information of the client
+          items:
+            $ref: '#/components/schemas/PersonalInformation'
+    Client:
+      allOf:
+      - $ref: '#/components/schemas/NewClient'
+      - required:
+        - clientId
+        type: object
+        properties:
+          clientId:
+            type: integer
+            description: The identification number of the client
+    PersonalInformation:
+      required:
+      - address
+      - city
+      - country
+      - email
+      - firstName
+      - lastName
+      - password
+      - phone
+      - postalCode
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email of the client that must always have a "@" and can't
+            be modified.
+        firstName:
+          type: string
+          description: The client's first name.
+        lastName:
+          type: string
+          description: The client's last name.
+        city:
+          type: string
+          description: The city that the client lives in.
+        country:
+          type: string
+          description: The country that the client lives in.
+        postalCode:
+          type: integer
+          description: The postal code of the client.
+        phone:
+          maximum: 10
+          type: string
+          description: The phone number of this client that has a maximum of 10 characters.
+        address:
+          minimum: 2
+          type: string
+          description: The address of the client that has a minimum of 2 characters.
+        password:
+          minimum: 8
+          type: string
+          description: The client's password that must have a length greater or equal
+            than 8
+    NewAppointment:
+      required:
+      - clientId
+      - serviceDetails
+      - serviceId
+      - status
+      - timeSlot
+      type: object
+      properties:
+        timeSlot:
+          type: array
+          description: The timeslot for this specific appointment
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+        serviceId:
+          type: integer
+          description: The identification number of the service that takes part in
+            this appointment.
+        clientId:
+          type: integer
+          description: The identification number of the client that takes part in
+            this appointment.
+        serviceDetails:
+          type: string
+          description: Contains the service details provided by the client about his
+            specific need in this appointment
+        status:
+          type: string
+          description: The status of this appointment.
+          default: Confirmation Pending
+          enum:
+          - Cancelled
+          - Completed
+          - Confirmation Pending
+          - Confirmed
+    Appointment:
+      allOf:
+      - $ref: '#/components/schemas/NewAppointment'
+      - required:
+        - appointmentId
+        type: object
+        properties:
+          appointmentId:
+            type: integer
+            description: The identification number of the appointment
+    TimeSlot:
+      required:
+      - availability
+      - date
+      - startingTime
+      type: object
+      properties:
+        availability:
+          type: boolean
+          description: Declares if a timeslot is available for an appointment or not
+        date:
+          type: string
+          description: The date of the specific timeSlot
+          format: date
+        startingTime:
+          type: string
+          description: The starting time of the specific timeSlot
+          format: time
+    Rating:
+      required:
+      - clientId
+      - date
+      - serviceId
+      - stars
+      type: object
+      properties:
+        serviceId:
+          type: integer
+          description: The identification number of the service that has this rating.
+        clientId:
+          type: integer
+          description: The identification number of the client that made this rating
+        stars:
+          maximum: 5
+          minimum: 1
+          type: integer
+          description: The number of stars that the client rated the service with.
+        date:
+          type: string
+          description: The date that this rating was made
+          format: date
+        review:
+          type: string
+          description: The review that the client gave the service.
+      example:
+        date: 2000-01-23
+        clientId: 6
+        review: review
+        stars: 1
+        serviceId: 0
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  requestBodies:
+    ServiceRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Service'
+    NewServiceRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NewService'
+    ClientRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Client'
+    NewClientRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NewClient'
+    AppointmentRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Appointment'
+    NewAppointmentRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NewAppointment'
+    RatingRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Rating'
