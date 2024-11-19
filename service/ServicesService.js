@@ -1,5 +1,28 @@
-'use strict';
+"use strict";
 
+let services = [
+  {
+    serviceId: 1,
+    userType: "service",
+    serviceType: "Plumbing",
+    description: "Expert plumbing services.",
+    city: "Los Angeles",
+    address: "456 Elm Street",
+    country: "USA",
+    postalCode: 90001,
+    email: "plumbing.services@example.com",
+    phone: "9876543210",
+    rating: 4.5,
+    serviceImg: "binaryImageData",
+    availableTimeSlots: [
+      {
+        availability: true,
+        date: "2023-12-01",
+        startingTime: "09:00",
+      },
+    ],
+  },
+];
 
 /**
  * Create a professional account - service
@@ -8,53 +31,105 @@
  * body NewService  (optional)
  * returns Service
  **/
-exports.createService = function(body) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+exports.createService = function (body) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (!body || body.userType !== "service") {
+        return reject(
+          respondWithCode(400, {
+            message:
+              "Invalid service data. 'userType' must be 'service' is required.",
+          })
+        );
+      }
+
+      // Check if body exists and has the required properties
+      const requiredFields = [
+        "userType",
+        "serviceType",
+        "description",
+        "city",
+        "address",
+        "country",
+        "postalCode",
+        "email",
+        "phone",
+        "rating",
+        "serviceImg",
+        "availableTimeSlots",
+      ];
+
+      // Validate required fields
+      for (const field of requiredFields) {
+        if (
+          body[field] === undefined ||
+          body[field] === null ||
+          body[field] === ""
+        ) {
+          return reject(
+            respondWithCode(400, {
+              message: `Invalid service data. '${field}' is required.`,
+            })
+          );
+        }
+      }
+
+      // Validate 'description' length (maximum 300 characters)
+      if (body.description.length > 300) {
+        return reject(
+          respondWithCode(400, {
+            message: "Description cannot exceed 300 characters.",
+          })
+        );
+      }
+
+      // Validate 'phone' length (maximum 10 characters)
+      if (body.phone.length > 10) {
+        return reject(
+          respondWithCode(400, {
+            message: "Phone number cannot exceed 10 characters.",
+          })
+        );
+      }
+
+      // Validate 'email' format (must contain '@')
+      if (!body.email.includes("@")) {
+        return reject(
+          respondWithCode(400, {
+            message: "Invalid email format.",
+          })
+        );
+      }
+
+      // Validate 'rating' is a number between 1 and 5
+      if (
+        typeof body.rating !== "number" ||
+        body.rating < 1 ||
+        body.rating > 5
+      ) {
+        return reject(
+          respondWithCode(400, {
+            message: "Rating must be a number between 1 and 5.",
+          })
+        );
+      }
+
+      const newService = {
+        serviceId: Math.floor(Math.random() * 1000) + 1, 
+        ...body,
+      };
+
+      // Return the created service
+      resolve(newService);
+    } catch (error) {
+      reject(
+        respondWithCode(500, {
+          message: "Internal Server Error",
+        })
+      );
     }
   });
-}
-
-
-/**
- * Delete a service.
- * Delete a service by service id.
- *
- * serviceId String ID of the service to delete
- * no response value expected for this operation
- **/
-exports.deleteService = function(serviceId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
-}
-
-
-/**
- * Edit a service
- * FR-9 The professional must be able to edit his service's information
- *
- * body Service  (optional)
- * serviceId Integer The service's id
- * returns Service
- **/
-exports.editService = function(body,serviceId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
-
+};
 
 /**
  * Get a service
@@ -63,18 +138,197 @@ exports.editService = function(body,serviceId) {
  * serviceId Integer The service's id
  * returns Service
  **/
-exports.getService = function(serviceId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+exports.getService = function (serviceId) {
+  return new Promise(function (resolve, reject) {
+    try {
+      // Validate that serviceId is provided and is a valid integer
+      if (
+        serviceId === undefined ||
+        serviceId === null ||
+        isNaN(serviceId) ||
+        parseInt(serviceId) <= 0
+      ) {
+        return reject(
+          respondWithCode(400, {
+            message: "Invalid 'serviceId'. It must be a positive integer.",
+          })
+        );
+      }
+
+      const service = services.find(
+        (service) => service.serviceId === serviceId
+      );
+
+      if (!service) {
+        return reject(
+          respondWithCode(404, {
+            message: `No service found with serviceId: ${id}.`,
+          })
+        );
+      }
+
+      const serviceResponse = { ...service };
+
+      // Return the service data
+      resolve(serviceResponse);
+    } catch (error) {
+      reject(
+        respondWithCode(500, {
+          message: "Internal Server Error",
+        })
+      );
     }
   });
-}
+};
 
+/*** Edit a service
+ * FR-9 The professional must be able to edit his service's information
+ *
+ * body Service  (optional)
+ * serviceId Integer The service's id
+ * returns Service
+ **/
+exports.editService = function (body, serviceId) {
+  return new Promise(function (resolve, reject) {
+    try {
+      // Validate that serviceId is provided and is a valid integer
+      if (
+        serviceId === undefined ||
+        serviceId === null ||
+        typeof serviceId !== "number" ||
+        !Number.isInteger(serviceId) ||
+        serviceId <= 0
+      ) {
+        return reject(
+          respondWithCode(400, {
+            message: "'serviceId' must be a positive integer.",
+          })
+        );
+      }
+      
+      // Validate that body is provided   
+      if (!body) {
+        return reject(
+          respondWithCode(400, {
+            message: "Invalid service data. 'body' is required.",
+          })
+        );
+      }
+
+      const service = services.find(
+        (service) => service.serviceId === serviceId
+      );
+
+      // Service not found
+      if (!service) {
+        return reject(
+          respondWithCode(404, {
+            message: `No service found with serviceId: ${serviceId}`,
+          })
+        );
+      }
+
+      // List of fields that can be updated
+      const updatableFields = [
+        "serviceType",
+        "description",
+        "city",
+        "address",
+        "country",
+        "postalCode",
+        "availableTimeSlots",
+        "phone",
+        "serviceImg",
+      ];
+
+      // Validate and update each field
+      for (const field of updatableFields) {
+        if (body[field] !== undefined) {
+          switch (field) {
+            case "description":
+              if (body.description.length > 300) {
+                return reject(
+                  respondWithCode(400, {
+                    message: "Description cannot exceed 300 characters.",
+                  })
+                );
+              }
+              break;
+            case "phone":
+              if (body.phone.length > 10) {
+                return reject(
+                  respondWithCode(400, {
+                    message: "Phone number cannot exceed 10 characters.",
+                  })
+                );
+              }
+              break;
+          }
+          // Update the field
+          service[field] = body[field];
+        }
+      }
+
+      // Return the updated service
+      resolve(service);
+    } catch (error) {
+      reject(
+        respondWithCode(500, {
+          message: "Internal Server Error",
+        })
+      );
+    }
+  });
+};
+
+/**
+ * Delete a service.
+ * Delete a service by service id.
+ *
+ * serviceId Integer ID of the service to delete
+ * no response value expected for this operation
+ **/
+exports.deleteService = function (serviceId) {
+  return new Promise(function (resolve, reject) {
+    try {
+      // Validate that serviceId is provided and is a valid integer
+      if (
+        serviceId === undefined ||
+        serviceId === null ||
+        typeof serviceId !== "number" ||
+        !Number.isInteger(serviceId) ||
+        serviceId <= 0
+      ) {
+        return reject(
+          respondWithCode(400, {
+            message: "'serviceId' must be a positive integer.",
+          })
+        );
+      }
+      const service = services.find(
+        (service) => service.serviceId === serviceId
+      );
+
+      if (service) {
+        // Successful deletion
+        resolve();
+      } else {
+        // Service not found
+        return reject(
+          respondWithCode(404, {
+            message: `No service found with serviceId: ${serviceId}`,
+          })
+        );
+      }
+    } catch (error) {
+      reject(
+        respondWithCode(500, {
+          message: "Internal Server Error",
+        })
+      );
+    }
+  });
+};
 
 /**
  * Search for services by name and filters
@@ -86,15 +340,94 @@ exports.getService = function(serviceId) {
  * ratingFilter Integer Minimum rating of the service to search for. (optional)
  * returns List
  **/
-exports.searchServices = function(search,typeFilter,locationFilter,ratingFilter) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+
+exports.searchServices = function (
+  search,
+  typeFilter,
+  locationFilter,
+  ratingFilter
+) {
+  return new Promise(function (resolve, reject) {
+    try {
+      const filters = {};
+
+      // Validate and assign 'search' filter
+      if (search !== undefined) {
+        if (typeof search !== "string" || search.trim() === "") {
+          {
+            return reject(
+              respondWithCode(400, {
+                message: `Invalid 'search'. It must be a non-empty string.`,
+              })
+            );
+          }
+        }
+        filters.search = search.trim();
+      }
+
+      // Validate and assign 'typeFilter'
+      if (typeFilter !== undefined) {
+        if (typeof typeFilter !== "string" || typeFilter.trim() === "") {
+          return reject(
+            respondWithCode(400, {
+              message: `Invalid 'typeFilter'. It must be a non-empty string.`,
+            })
+          );
+        }
+
+        filters.typeFilter = typeFilter.trim();
+      }
+
+      // Validate and assign 'locationFilter'
+      if (locationFilter !== undefined) {
+        if (
+          typeof locationFilter !== "string" ||
+          locationFilter.trim() === ""
+        ) {
+          return reject(
+            respondWithCode(400, {
+              message:
+                "Invalid 'locationFilter'. It must be a non-empty string.",
+            })
+          );
+        }
+        filters.locationFilter = locationFilter.trim();
+      }
+
+      // Validate and assign 'ratingFilter'
+      if (ratingFilter !== undefined) {
+        if (
+          typeof ratingFilter !== "number" ||
+          !Number.isInteger(ratingFilter) ||
+          ratingFilter < 1 ||
+          ratingFilter > 5
+        ) {
+          return reject(
+            respondWithCode(400, {
+              message:
+                "Invalid 'ratingFilter'. It must be an integer between 1 and 5.",
+            })
+          );
+        }
+        filters.ratingFilter = ratingFilter;
+      }
+      
+      // Selecting random service objects for illustration purposes
+      const results = services
+        .sort(() => 0.5 - Math.random())
+        .slice(0, Math.random() % 2);
+      
+        if (results.length > 0) {
+        // Found matching services
+        resolve(results);
+      } else {
+        resolve([]);
+      }
+    } catch (error) {
+      reject({
+        statusCode: 500,
+        message: "Internal Server Error",
+      });
     }
   });
-}
-
+};
