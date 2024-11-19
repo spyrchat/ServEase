@@ -1,7 +1,6 @@
-'use strict';
+"use strict";
 
 const { respondWithCode } = require("../utils/writer");
-
 
 /**
  * Create a personal account - client
@@ -10,48 +9,93 @@ const { respondWithCode } = require("../utils/writer");
  * body NewClient  (optional)
  * returns Client
  **/
-exports.createClient = function(body) {
-  return new Promise(function(resolve, reject) {
-    // Check if required fields are present
-    if (body.userType !== 'client') {
-      return reject(respondWithCode(422, {message:"Invalid input: 'userType' must be 'client'"}) );
+exports.createClient = function (body) {
+  return new Promise(function (resolve, reject) {
+    try {
+      // Check if body exists and has the required properties
+      if (
+        !body ||
+        body.userType !== "client" ||
+        !body.personalInfo ||
+        !Array.isArray(body.personalInfo) ||
+        body.personalInfo.length === 0
+      ) {
+        return reject(
+          respondWithCode(400, {
+            message:
+              "Invalid client data. 'userType' must be 'client' and 'personalInfo' is required.",
+          })
+        );
+      }
+
+      const personalInfo = body.personalInfo[0];
+
+      // Required fields
+      const requiredFields = [
+        "email",
+        "firstName",
+        "lastName",
+        "city",
+        "country",
+        "postalCode",
+        "phone",
+        "address",
+        "password",
+      ];
+
+      // Validate required fields
+      const missingFields = requiredFields.filter(
+        (field) => !personalInfo[field]
+      );
+
+      if (missingFields.length > 0) {
+        return reject(
+          respondWithCode(422, {
+            message: `Missing required fields: ${missingFields.join(", ")}`,
+          })
+        );
+      }
+
+      // Email must contain '@'
+      if (!personalInfo.email.includes("@")) {
+        return reject(
+          respondWithCode(400, {
+            message: "Invalid email format.",
+          })
+        );
+      }
+
+      // Phone number must not exceed 10 characters
+      if (personalInfo.phone.length > 10) {
+        return reject(
+          respondWithCode(400, {
+            message: "Phone number cannot exceed 10 characters.",
+          })
+        );
+      }
+
+      // Add clientId
+      const newClient = {
+        clientId: Math.floor(Math.random() * 1000) + 1,
+        ...body,
+      };
+
+      // Do not include password in the response
+      if (newClient.personalInfo && newClient.personalInfo[0]) {
+        delete newClient.personalInfo[0].password;
+      }
+
+      // Return the created client
+      resolve(newClient);
+    } catch (error) {
+      reject(
+        respondWithCode(500, {
+          message: "Internal Server Error",
+        })
+      );
     }
-    // Validate each field in personalInfo array
-    const personalInfo = body.personalInfo[0];
-    const requiredFields = ['address', 'city', 'country', 'email', 'firstName', 'lastName', 'password', 'phone', 'postalCode'];
-    const missingFields = requiredFields.filter(field => !personalInfo[field]);
-
-    if (missingFields.length > 0) {
-      return reject(respondWithCode(422, {message:`Missing required fields: ${missingFields.join(', ')}`}) );
-    }
-    // Check field constraints
-    if (personalInfo.phone.length > 10) {
-      return reject(respondWithCode(422, {message:"Phone number must not exceed 10 characters."}) );
-    }
-
-    if (personalInfo.password.length < 8) {
-      return reject(respondWithCode(422, {message:"Password must be at least 8 characters long."}) );
-    }
-
-    if (!personalInfo.email.includes('@')) {
-      return reject(respondWithCode(422, {message:"Email must contain an '@' symbol."}) );
-    }
-
-    // Simulate client creation by creating a client object with an ID
-    const newClient = {
-      clientId: Math.floor(Math.random() * 1000) + 1, // Simulate a generated client ID
-      userType: body.userType,
-      personalInfo: body.personalInfo
-    };
-
-    // Resolve the promise with the complete new client object
-    resolve(
-      newClient
-    );
-
   });
-}
-
+};
 
 /**
  * Delete a client
@@ -60,12 +104,11 @@ exports.createClient = function(body) {
  * clientId String ID of the client to delete
  * no response value expected for this operation
  **/
-exports.deleteClient = function(clientId) {
-  return new Promise(function(resolve, reject) {
+exports.deleteClient = function (clientId) {
+  return new Promise(function (resolve, reject) {
     resolve();
   });
-}
-
+};
 
 /**
  * Edit a client
@@ -75,18 +118,17 @@ exports.deleteClient = function(clientId) {
  * clientId Integer The client's id
  * returns Client
  **/
-exports.editClient = function(body,clientId) {
-  return new Promise(function(resolve, reject) {
+exports.editClient = function (body, clientId) {
+  return new Promise(function (resolve, reject) {
     var examples = {};
-    examples['application/json'] = "";
+    examples["application/json"] = "";
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
       resolve();
     }
   });
-}
-
+};
 
 /**
  * Get a client
@@ -95,15 +137,14 @@ exports.editClient = function(body,clientId) {
  * clientId Integer The client's id
  * returns Client
  **/
-exports.getClient = function(clientId) {
-  return new Promise(function(resolve, reject) {
+exports.getClient = function (clientId) {
+  return new Promise(function (resolve, reject) {
     var examples = {};
-    examples['application/json'] = "";
+    examples["application/json"] = "";
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
       resolve();
     }
   });
-}
-
+};
