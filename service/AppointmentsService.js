@@ -214,7 +214,6 @@ exports.getAppointment = function (appointmentId) {
 exports.getClientAppointments = function (clientId, serviceId) {
   return new Promise((resolve, reject) => {
     try {
-      // Assume 'appointments' is an array available in this scope
       let results = appointments;
 
       // Apply clientId filter if provided
@@ -233,7 +232,6 @@ exports.getClientAppointments = function (clientId, serviceId) {
 
       resolve(results);
     } catch (error) {
-      // Assuming respondWithCode formats the error response appropriately
       reject(
         respondWithCode(500, {
           message: "Internal Server Error",
