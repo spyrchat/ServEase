@@ -212,28 +212,28 @@ exports.getAppointment = function (appointmentId) {
  * returns List
  **/
 exports.getClientAppointments = function (clientId, serviceId) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      var results = appointments;
+      // Assume 'appointments' is an array available in this scope
+      let results = appointments;
 
-      // Search for appointments based on provided filters
-      if (clientId !== null || clientId !== undefined) {
-        results = results.find(
+      // Apply clientId filter if provided
+      if (clientId !== null && clientId !== undefined) {
+        results = results.filter(
           (appointment) => appointment.clientId === clientId
         );
       }
-      if (serviceId !== null || serviceId !== undefined) {
-        results = results.find(
+
+      // Apply serviceId filter if provided
+      if (serviceId !== null && serviceId !== undefined) {
+        results = results.filter(
           (appointment) => appointment.serviceId === serviceId
         );
       }
 
-      if (results.length > 0) {
-        resolve(results);
-      } else {
-        resolve([]);
-      }
+      resolve(results);
     } catch (error) {
+      // Assuming respondWithCode formats the error response appropriately
       reject(
         respondWithCode(500, {
           message: "Internal Server Error",
