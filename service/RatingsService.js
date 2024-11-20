@@ -26,9 +26,9 @@ let ratings = [
   },
 ];
 
-let client = [{ clientId: 1 }, { clientId: 2 }, { clientId: 3 }];
+let clients = [{ clientId: 1 }, { clientId: 2 }, { clientId: 3 }];
 
-let service = [{ serviceId: 1 }, { serviceId: 2 }, { serviceId: 3 }];
+let services = [{ serviceId: 1 }, { serviceId: 2 }, { serviceId: 3 }];
 
 /**
  * Create a rating
@@ -41,43 +41,8 @@ let service = [{ serviceId: 1 }, { serviceId: 2 }, { serviceId: 3 }];
 exports.createRating = function (body, serviceId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate 'serviceId'
-      if (
-        serviceId === undefined ||
-        serviceId === null ||
-        typeof serviceId !== "number" ||
-        !Number.isInteger(serviceId) ||
-        serviceId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "'serviceId' must be a positive integer.",
-          })
-        );
-      }
-
-      // Validate that 'clientId' is provided and is a valid integer
-      if (
-        body.clientId === undefined ||
-        body.clientId === null ||
-        typeof body.clientId !== "number" ||
-        !Number.isInteger(body.clientId) ||
-        body.clientId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "'clientId' must be a positive integer.",
-          })
-        );
-      }
-
       // Validate 'stars'
-      if (
-        typeof body.stars !== "number" ||
-        !Number.isInteger(body.stars) ||
-        body.stars < 1 ||
-        body.stars > 5
-      ) {
+      if (body.stars < 1 || body.stars > 5) {
         return reject(
           respondWithCode(400, {
             message: "'stars' must be an integer between 1 and 5.",
@@ -86,7 +51,7 @@ exports.createRating = function (body, serviceId) {
       }
 
       // Check if client exists
-      const client = client.find((client) => client.clientId === body.clientId);
+      const client = clients.find((client) => client.clientId === body.clientId);
 
       if (!client) {
         return reject(
@@ -97,7 +62,7 @@ exports.createRating = function (body, serviceId) {
       }
 
       // Check if service exists
-      const service = service.find(
+      const service = services.find(
         (service) => service.serviceId === serviceId
       );
 
@@ -140,23 +105,8 @@ exports.createRating = function (body, serviceId) {
 exports.getServiceRatings = function (serviceId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate 'serviceId'
-      if (
-        serviceId === undefined ||
-        serviceId === null ||
-        typeof serviceId !== "number" ||
-        !Number.isInteger(serviceId) ||
-        serviceId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "'serviceId' must be a positive integer.",
-          })
-        );
-      }
-
       // Check if service exists
-      const service = service.find(
+      const service = services.find(
         (service) => service.serviceId === serviceId
       );
 
