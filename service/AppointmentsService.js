@@ -61,35 +61,6 @@ let appointments = [
 exports.createAppointment = function (body) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate 'clientId'
-      if (
-        body.clientId === undefined ||
-        body.clientId === null ||
-        typeof body.clientId !== "number" ||
-        !Number.isInteger(body.clientId) ||
-        body.clientId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "'clientId' must be a positive integer.",
-          })
-        );
-      }
-
-      // Validate 'serviceId'
-      if (
-        body.serviceId === undefined ||
-        body.serviceId === null ||
-        typeof body.serviceId !== "number" ||
-        !Number.isInteger(body.serviceId) ||
-        body.serviceId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "'serviceId' must be a positive integer.",
-          })
-        );
-      }
 
       // Check if client exists
       const client = clients.find(
@@ -117,17 +88,6 @@ exports.createAppointment = function (body) {
             message: `No service found with serviceId: ${body.serviceId}`,
           })
         );
-      }
-
-      // Validate 'timeSlot' if provided
-      if (body.timeSlot !== undefined) {
-        if (!Array.isArray(body.timeSlot) || body.timeSlot.length === 0) {
-          return reject(
-            respondWithCode(400, {
-              message: "'timeSlot' must be a non-empty array.",
-            })
-          );
-        }
       }
 
       // Simulate new appointment creation
@@ -159,21 +119,6 @@ exports.createAppointment = function (body) {
 exports.editServiceAppointment = function (body, appointmentId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate appointmentId
-      if (
-        appointmentId === undefined ||
-        appointmentId === null ||
-        typeof appointmentId !== "number" ||
-        !Number.isInteger(appointmentId) ||
-        appointmentId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "Invalid 'appointmentId'. It must be a positive integer.",
-          })
-        );
-      }
-
       // Validate that body is provided
       if (!body) {
         return reject(
@@ -181,17 +126,6 @@ exports.editServiceAppointment = function (body, appointmentId) {
             message: "Invalid appointment data. 'body' is required.",
           })
         );
-      }
-
-      // Validate 'timeSlot' if provided
-      if (body.timeSlot !== undefined) {
-        if (!Array.isArray(body.timeSlot) || body.timeSlot.length === 0) {
-          return reject(
-            respondWithCode(400, {
-              message: "'timeSlot' must be a non-empty array.",
-            })
-          );
-        }
       }
 
       // Fetch the existing appointment
@@ -243,21 +177,6 @@ exports.editServiceAppointment = function (body, appointmentId) {
 exports.getAppointment = function (appointmentId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate appointmentId
-      if (
-        appointmentId === undefined ||
-        appointmentId === null ||
-        typeof appointmentId !== "number" ||
-        !Number.isInteger(appointmentId) ||
-        appointmentId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "Invalid 'appointmentId'. It must be a positive integer.",
-          })
-        );
-      }
-
       // Find appointment by appointment id
       const appointment = appointments.find(
         (appointment) => appointment.appointmentId === appointmentId
@@ -295,59 +214,19 @@ exports.getAppointment = function (appointmentId) {
 exports.getClientAppointments = function (clientId, serviceId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate 'clientId'
-      if (
-        body.clientId === undefined ||
-        body.clientId === null ||
-        typeof body.clientId !== "number" ||
-        !Number.isInteger(body.clientId) ||
-        body.clientId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "'clientId' must be a positive integer.",
-          })
-        );
-      }
-
-      // Optionally, check if client exists
-      const client = getClientById(clientId);
-
-      if (!client) {
-        return reject(
-          respondWithCode(404, {
-            message: `No client found with clientId: ${clientId}`,
-          })
-        );
-      }
-
-      // Validate 'serviceId'
-      if (
-        body.serviceId === undefined ||
-        body.serviceId === null ||
-        typeof body.serviceId !== "number" ||
-        !Number.isInteger(body.serviceId) ||
-        body.serviceId <= 0
-      ) {
-        return reject(
-          respondWithCode(400, {
-            message: "'serviceId' must be a positive integer.",
-          })
-        );
-      }
-
-      // Optionally, check if service exists
-      const service = getServiceById(serviceId);
-      if (!service) {
-        return reject(
-          respondWithCode(404, {
-            message: `No service found with serviceId: ${serviceId}`,
-          })
-        );
-      }
+      var results = appointments;
 
       // Search for appointments based on provided filters
-      const results = searchAppointments(clientId, serviceId); // Implement this function
+      if (clientId !== null || clientId !== undefined) {
+        results = results.find(
+          (appointment) => appointment.clientId === clientId
+        );
+      }
+      if (serviceId !== null || serviceId !== undefined) {
+        results = results.find(
+          (appointment) => appointment.serviceId === serviceId
+        );
+      }
 
       if (results.length > 0) {
         resolve(results);
