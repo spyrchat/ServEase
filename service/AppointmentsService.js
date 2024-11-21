@@ -119,14 +119,6 @@ exports.createAppointment = function (body) {
 exports.editServiceAppointment = function (body, appointmentId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate that body is provided
-      if (!body) {
-        return reject(
-          respondWithCode(400, {
-            message: "Invalid appointment data. 'body' is required.",
-          })
-        );
-      }
 
       // Fetch the existing appointment
       const appointment = appointments.find(
