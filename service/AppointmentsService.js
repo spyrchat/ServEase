@@ -61,7 +61,6 @@ let appointments = [
 exports.createAppointment = function (body) {
   return new Promise(function (resolve, reject) {
     try {
-
       // Check if client exists
       const client = clients.find(
         (client) => client.clientId === body.clientId
@@ -119,7 +118,6 @@ exports.createAppointment = function (body) {
 exports.editServiceAppointment = function (body, appointmentId) {
   return new Promise(function (resolve, reject) {
     try {
-
       // Fetch the existing appointment
       const appointment = appointments.find(
         (appointment) => appointment.appointmentId === appointmentId
