@@ -157,7 +157,7 @@ exports.createService = function (body) {
       }
 
       const newService = {
-        serviceId: Math.floor(Math.random() * 1000) + 1, 
+        serviceId: Math.floor(Math.random() * 1000) + 1,
         ...body,
       };
 
@@ -247,8 +247,8 @@ exports.editService = function (body, serviceId) {
           })
         );
       }
-      
-      // Validate that body is provided   
+
+      // Validate that body is provided
       if (!body) {
         return reject(
           respondWithCode(400, {
@@ -334,9 +334,7 @@ exports.deleteService = function (serviceId) {
   return new Promise(function (resolve, reject) {
     try {
       // Validate that serviceId is provided and is a valid integer
-      if (
-        serviceId <= 0
-      ) {
+      if (serviceId <= 0) {
         return reject(
           respondWithCode(400, {
             message: "'serviceId' must be a positive integer.",
@@ -449,13 +447,13 @@ exports.searchServices = function (
         }
         filters.ratingFilter = ratingFilter;
       }
-      
+
       // Selecting random service objects for illustration purposes
       const results = services
         .sort(() => 0.5 - Math.random())
         .slice(0, Math.random() % 2);
-      
-        if (results.length > 0) {
+
+      if (results.length > 0) {
         // Found matching services
         resolve(results);
       } else {
