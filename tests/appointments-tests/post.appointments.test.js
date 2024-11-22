@@ -27,7 +27,7 @@ test.after.always((t) => {
 });
 
 /**
- * Tests successful creation of an appointment [HAPPY PATH].
+ * Tests successful creation of an appointment. [HAPPY PATH]
  */
 test("Unit Test POST /appointments - Successful creation of appointment", async (t) => {
   try {
@@ -78,7 +78,7 @@ test("Unit Test POST /appointments - Successful creation of appointment", async 
 });
 
 /**
- * Tests unsuccessful creation of an appointment - clientId doesn't match [UNHAPPY PATH].
+ * Tests unsuccessful creation of an appointment - clientId doesn't match. [UNHAPPY PATH]
  */
 test("Unit Test POST /appointments - Unsuccessful creation of appointment: clientId doesn't match", async (t) => {
   try {
@@ -118,7 +118,7 @@ test("Unit Test POST /appointments - Unsuccessful creation of appointment: clien
 });
 
 /**
- * Tests unsuccessful creation of an appointment - clientId not provided [UNHAPPY PATH].
+ * Tests unsuccessful creation of an appointment - clientId not provided. [UNHAPPY PATH]
  */
 test("Unit Test POST /appointments - Unsuccessful creation of appointment: clientId not provided", async (t) => {
   try {
@@ -158,7 +158,7 @@ test("Unit Test POST /appointments - Unsuccessful creation of appointment: clien
 });
 
 /**
- * Tests unsuccessful creation of an appointment - clientId is not integer [UNHAPPY PATH].
+ * Tests unsuccessful creation of an appointment - clientId is not integer. [UNHAPPY PATH]
  */
 test("Unit Test POST /appointments - Unsuccessful creation of appointment: clientId is not integer", async (t) => {
   try {
@@ -198,7 +198,7 @@ test("Unit Test POST /appointments - Unsuccessful creation of appointment: clien
 });
 
 /**
- * Tests unsuccessful creation of an appointment - serviceId doesn't match [UNHAPPY PATH].
+ * Tests unsuccessful creation of an appointment - serviceId doesn't match. [UNHAPPY PATH]
  */
 test("Unit Test POST /appointments - Unsuccessful creation of appointment: serviceId doesn't match", async (t) => {
   try {
@@ -238,7 +238,7 @@ test("Unit Test POST /appointments - Unsuccessful creation of appointment: servi
 });
 
 /**
- * Tests unsuccessful creation of an appointment - serviceId not provided [UNHAPPY PATH].
+ * Tests unsuccessful creation of an appointment - serviceId not provided. [UNHAPPY PATH]
  */
 test("Unit Test POST /appointments - Unsuccessful creation of appointment: serviceId not provided", async (t) => {
   try {
@@ -278,7 +278,7 @@ test("Unit Test POST /appointments - Unsuccessful creation of appointment: servi
 });
 
 /**
- * Tests unsuccessful creation of an appointment - serviceId is not integer [UNHAPPY PATH].
+ * Tests unsuccessful creation of an appointment - serviceId is not integer. [UNHAPPY PATH]
  */
 test("Unit Test POST /appointments - Unsuccessful creation of appointment: serviceId is not integer", async (t) => {
   try {
@@ -318,7 +318,7 @@ test("Unit Test POST /appointments - Unsuccessful creation of appointment: servi
 });
 
 /**
- * Tests unsuccessful creation of an appointment - timeSlot not provided [UNHAPPY PATH].
+ * Tests unsuccessful creation of an appointment - timeSlot not provided. [UNHAPPY PATH]
  */
 test("Unit Test POST /appointments - Unsuccessful creation of appointment: timeSlot not provided", async (t) => {
   try {
