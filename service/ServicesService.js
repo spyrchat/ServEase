@@ -1,5 +1,5 @@
 "use strict";
-
+const { respondWithCode } = require("../utils/writer");
 let services = [
   {
     serviceId: 1,
@@ -19,6 +19,48 @@ let services = [
         availability: true,
         date: "2023-12-01",
         startingTime: "09:00",
+      },
+    ],
+  },
+  {
+    serviceId: 2,
+    userType: "service",
+    serviceType: "Electrician",
+    description: "Professional electrical services for homes and offices.",
+    city: "New York",
+    address: "123 Maple Avenue",
+    country: "USA",
+    postalCode: 10001,
+    email: "electrician.pro@example.com",
+    phone: "1234567890",
+    rating: 4.7,
+    serviceImg: "binaryImageData",
+    availableTimeSlots: [
+      {
+        availability: true,
+        date: "2023-12-02",
+        startingTime: "10:00",
+      },
+    ],
+  },
+  {
+    serviceId: 3,
+    userType: "service",
+    serviceType: "Cleaning",
+    description: "Reliable and affordable cleaning services.",
+    city: "Chicago",
+    address: "789 Oak Lane",
+    country: "USA",
+    postalCode: 60601,
+    email: "cleaning.services@example.com",
+    phone: "1122334455",
+    rating: 4.3,
+    serviceImg: "binaryImageData",
+    availableTimeSlots: [
+      {
+        availability: true,
+        date: "2023-12-03",
+        startingTime: "11:00",
       },
     ],
   },
@@ -293,10 +335,6 @@ exports.deleteService = function (serviceId) {
     try {
       // Validate that serviceId is provided and is a valid integer
       if (
-        serviceId === undefined ||
-        serviceId === null ||
-        typeof serviceId !== "number" ||
-        !Number.isInteger(serviceId) ||
         serviceId <= 0
       ) {
         return reject(
