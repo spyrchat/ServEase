@@ -13,13 +13,11 @@ let appointments = [
     serviceId: 1,
     serviceDetails: "Need to fix my fridge",
     status: "Confirmation Pending",
-    timeSlot: [
-      {
-        availability: true,
-        date: "2024-12-20",
-        startingTime: "15:00:00",
-      },
-    ],
+    timeSlot: {
+      availability: true,
+      date: "2024-12-20",
+      startingTime: "15:00:00",
+    },
   },
   {
     appointmentId: 2,
@@ -27,13 +25,11 @@ let appointments = [
     serviceId: 2,
     serviceDetails: "Need to check my health, I am sick",
     status: "Confirmation Pending",
-    timeSlot: [
-      {
-        availability: true,
-        date: "2024-12-20",
-        startingTime: "18:00:00",
-      },
-    ],
+    timeSlot: {
+      availability: true,
+      date: "2024-12-20",
+      startingTime: "18:00:00",
+    },
   },
   {
     appointmentId: 3,
@@ -41,13 +37,11 @@ let appointments = [
     serviceId: 2,
     serviceDetails: "Need to check my son's health",
     status: "Confirmation Pending",
-    timeSlot: [
-      {
-        availability: true,
-        date: "2024-12-20",
-        startingTime: "19:00:00",
-      },
-    ],
+    timeSlot: {
+      availability: true,
+      date: "2024-12-20",
+      startingTime: "19:00:00",
+    },
   },
 ];
 
