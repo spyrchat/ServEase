@@ -3,7 +3,7 @@ const test = require("ava");
 const got = require("got");
 const app = require("../../index.js");
 
-// ------------------------------------------ TESTS: DELETE /services ------------------------------------------ //
+// ------------------------------------------ TESTS: DELETE /services/{serviceId} ------------------------------------------ //
 
 /**
  * Opens server, before tests.
