@@ -18,7 +18,7 @@ let services = [
       {
         availability: true,
         date: "2023-12-01",
-        startingTime: "09:00",
+        startingTime: "09:00:00",
       },
     ],
   },
@@ -39,7 +39,7 @@ let services = [
       {
         availability: true,
         date: "2023-12-02",
-        startingTime: "10:00",
+        startingTime: "10:00:00",
       },
     ],
   },
@@ -60,7 +60,7 @@ let services = [
       {
         availability: true,
         date: "2023-12-03",
-        startingTime: "11:00",
+        startingTime: "11:00:00",
       },
     ],
   },
@@ -234,33 +234,54 @@ exports.editService = function (body, serviceId) {
   return new Promise(function (resolve, reject) {
     try {
       // Validate that serviceId is provided and is a valid integer
-      if (
-        serviceId === undefined ||
-        serviceId === null ||
-        typeof serviceId !== "number" ||
-        !Number.isInteger(serviceId) ||
-        serviceId <= 0
-      ) {
+      if (serviceId <= 0) {
         return reject(
           respondWithCode(400, {
             message: "'serviceId' must be a positive integer.",
           })
         );
       }
-
-      // Validate that body is provided
-      if (!body) {
+      if (serviceId !==body.serviceId) {
         return reject(
           respondWithCode(400, {
-            message: "Invalid service data. 'body' is required.",
+            message: "'serviceId' in path must match serviceId in body.",
           })
         );
       }
 
+      // Check if body exists and has the required properties
+      const requiredFields = [
+        "userType",
+        "serviceType",
+        "description",
+        "city",
+        "address",
+        "country",
+        "postalCode",
+        "email",
+        "phone",
+        "rating",
+        "serviceImg",
+        "availableTimeSlots",
+      ];
+      
+      // Validate required fields
+      const missingFields = requiredFields.filter(
+        (field) => !body[field]
+      );
+
+      if (missingFields.length > 0) {
+        return reject(
+          respondWithCode(422, {
+            message: `Missing required fields: ${missingFields.join(", ")}`,
+          })
+        );
+      }
+      
       const service = services.find(
         (service) => service.serviceId === serviceId
       );
-
+      
       // Service not found
       if (!service) {
         return reject(
@@ -269,7 +290,7 @@ exports.editService = function (body, serviceId) {
           })
         );
       }
-
+      
       // List of fields that can be updated
       const updatableFields = [
         "serviceType",
