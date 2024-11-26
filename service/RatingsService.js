@@ -42,6 +42,7 @@ exports.createRating = function (body, serviceId) {
   return new Promise(function (resolve, reject) {
     try {
       // Validate 'stars'
+      console.log("klelaki");
       if (body.stars < 1 || body.stars > 5) {
         return reject(
           respondWithCode(400, {
@@ -56,7 +57,7 @@ exports.createRating = function (body, serviceId) {
       if (!client) {
         return reject(
           respondWithCode(404, {
-            message: "No client found with clientId: ${body.clientId}",
+            message: `No client found with clientId: ${body.clientId}`,
           })
         );
       }
@@ -69,7 +70,7 @@ exports.createRating = function (body, serviceId) {
       if (!service) {
         return reject(
           respondWithCode(404, {
-            message: "No service found with serviceId: ${serviceId}",
+            message: `No service found with serviceId: ${serviceId}`,
           })
         );
       }
@@ -113,7 +114,7 @@ exports.getServiceRatings = function (serviceId) {
       if (!service) {
         return reject(
           respondWithCode(404, {
-            message: "No service found with serviceId: ${serviceId}",
+            message: `No service found with serviceId: ${serviceId}`,
           })
         );
       }
