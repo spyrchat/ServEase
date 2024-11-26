@@ -1,4 +1,7 @@
 "use strict";
+const { respondWithCode } = require("../utils/writer");
+
+let service = [{ serviceId: 1 }, { serviceId: 2 }, { serviceId: 3 }];
 
 let services = [
   {
@@ -138,11 +141,18 @@ exports.createService = function (body) {
  * serviceId Integer The service's id
  * returns Service
  **/
+/**
+ * Get a service
+ * FR-5 The client must be able to access a service's information, FR-9 The professional must be able to edit his service's information
+ *
+ * serviceId Integer The service's id
+ * returns Service
+ **/
 exports.getService = function (serviceId) {
   return new Promise(function (resolve, reject) {
     try {
       // Validate that serviceId is provided and is a valid integer
-      if (serviceId <= 0) {
+      if (!Number.isInteger(serviceId) || serviceId <= 0) {
         return reject(
           respondWithCode(400, {
             message: "'serviceId' must be a positive integer.",
@@ -150,10 +160,12 @@ exports.getService = function (serviceId) {
         );
       }
 
+      // Search for the service in the services array
       const service = services.find(
         (service) => service.serviceId === serviceId
       );
 
+      // If the service is not found, return a 404 error
       if (!service) {
         return reject(
           respondWithCode(404, {
@@ -162,10 +174,8 @@ exports.getService = function (serviceId) {
         );
       }
 
-      const serviceResponse = { ...service };
-
-      // Return the service data
-      resolve(serviceResponse);
+      // If found, resolve with the service data
+      resolve(service);
     } catch (error) {
       reject(
         respondWithCode(500, {
