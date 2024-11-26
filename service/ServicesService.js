@@ -18,7 +18,7 @@ let services = [
       {
         availability: true,
         date: "2023-12-01",
-        startingTime: "09:00",
+        startingTime: "09:00:00",
       },
     ],
   },
@@ -115,7 +115,7 @@ exports.createService = function (body) {
       }
 
       const newService = {
-        serviceId: Math.floor(Math.random() * 1000) + 1, 
+        serviceId: Math.floor(Math.random() * 1000) + 1,
         ...body,
       };
 
@@ -142,15 +142,10 @@ exports.getService = function (serviceId) {
   return new Promise(function (resolve, reject) {
     try {
       // Validate that serviceId is provided and is a valid integer
-      if (
-        serviceId === undefined ||
-        serviceId === null ||
-        isNaN(serviceId) ||
-        parseInt(serviceId) <= 0
-      ) {
+      if (serviceId <= 0) {
         return reject(
           respondWithCode(400, {
-            message: "Invalid 'serviceId'. It must be a positive integer.",
+            message: "'serviceId' must be a positive integer.",
           })
         );
       }
@@ -162,7 +157,7 @@ exports.getService = function (serviceId) {
       if (!service) {
         return reject(
           respondWithCode(404, {
-            message: `No service found with serviceId: ${id}.`,
+            message: `No service found with serviceId: ${serviceId}.`,
           })
         );
       }
@@ -205,8 +200,8 @@ exports.editService = function (body, serviceId) {
           })
         );
       }
-      
-      // Validate that body is provided   
+
+      // Validate that body is provided
       if (!body) {
         return reject(
           respondWithCode(400, {
@@ -411,13 +406,13 @@ exports.searchServices = function (
         }
         filters.ratingFilter = ratingFilter;
       }
-      
+
       // Selecting random service objects for illustration purposes
       const results = services
         .sort(() => 0.5 - Math.random())
         .slice(0, Math.random() % 2);
-      
-        if (results.length > 0) {
+
+      if (results.length > 0) {
         // Found matching services
         resolve(results);
       } else {
