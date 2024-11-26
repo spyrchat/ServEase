@@ -149,9 +149,9 @@ exports.createService = function (body) {
  * returns Service
  **/
 exports.getService = function (serviceId) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      // Validate that serviceId is provided and is a valid integer
+      console.log("Services array:", services); // Log the services array
       if (!Number.isInteger(serviceId) || serviceId <= 0) {
         return reject(
           respondWithCode(400, {
@@ -160,12 +160,7 @@ exports.getService = function (serviceId) {
         );
       }
 
-      // Search for the service in the services array
-      const service = services.find(
-        (service) => service.serviceId === serviceId
-      );
-
-      // If the service is not found, return a 404 error
+      const service = services.find((s) => s.serviceId === serviceId);
       if (!service) {
         return reject(
           respondWithCode(404, {
@@ -174,7 +169,6 @@ exports.getService = function (serviceId) {
         );
       }
 
-      // If found, resolve with the service data
       resolve(service);
     } catch (error) {
       reject(
