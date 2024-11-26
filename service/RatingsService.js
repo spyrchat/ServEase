@@ -2,7 +2,7 @@
 const { respondWithCode } = require("../utils/writer");
 
 // Example in-memory data store
-let ratings = [
+const ratings = [
   {
     clientId: 1,
     serviceId: 1,
@@ -22,7 +22,6 @@ let ratings = [
     serviceId: 2,
     stars: 4,
     date: "2020-11-15",
-    review: "Very professional.",
   },
 ];
 
@@ -41,16 +40,6 @@ let services = [{ serviceId: 1 }, { serviceId: 2 }, { serviceId: 3 }];
 exports.createRating = function (body, serviceId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate 'stars'
-      console.log("klelaki");
-      if (body.stars < 1 || body.stars > 5) {
-        return reject(
-          respondWithCode(400, {
-            message: "'stars' must be an integer between 1 and 5.",
-          })
-        );
-      }
-
       // Check if client exists
       const client = clients.find((client) => client.clientId === body.clientId);
 
@@ -120,7 +109,7 @@ exports.getServiceRatings = function (serviceId) {
       }
 
       // Retrieve ratings for the service
-      const serviceRatings = ratings.find(
+      const serviceRatings = ratings.filter(
         (ratings) => ratings.serviceId === serviceId
       );
 
@@ -128,7 +117,10 @@ exports.getServiceRatings = function (serviceId) {
       if (serviceRatings && serviceRatings.length > 0) {
         resolve(serviceRatings);
       } else {
-        resolve([]);
+        resolve({
+          message: "No ratings yet for this service.",
+          data: []
+      });
       }
     } catch (error) {
       reject(
