@@ -85,7 +85,9 @@ test("createService - Invalid UserType", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", { json: body });
+    const serviceResponse = await t.context.got.post("services", {
+      json: body,
+    });
     t.fail("Expected createService to throw an error");
   } catch (error) {
     // Assert that the API returns a 400 error for invalid userType
@@ -117,7 +119,9 @@ test("createService - Missing Required Fields", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", { json: body });
+    const serviceResponse = await t.context.got.post("services", {
+      json: body,
+    });
     t.fail("Expected createService to throw an error");
   } catch (error) {
     // Assert that the API returns a 400 error for missing required fields
@@ -149,7 +153,9 @@ test("createService - Phone Number Exceeds Limit", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", { json: body });
+    const serviceResponse = await t.context.got.post("services", {
+      json: body,
+    });
     t.fail("Expected createService to throw an error");
   } catch (error) {
     // Assert that the API returns a 400 error for exceeding phone character limit
@@ -181,15 +187,14 @@ test("createService - Invalid Rating", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", { json: body });
+    const serviceResponse = await t.context.got.post("services", {
+      json: body,
+    });
     t.fail("Expected createService to throw an error");
   } catch (error) {
     // Assert that the API returns a 400 error for invalid rating
     t.is(error.response.statusCode, 400);
-    t.is(
-      error.response.body.message,
-      "request.body.rating should be <= 5"
-    );
+    t.is(error.response.body.message, "request.body.rating should be <= 5");
   }
 });
 
@@ -213,7 +218,9 @@ test("createService - Invalid Email Format", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", { json: body });
+    const serviceResponse = await t.context.got.post("services", {
+      json: body,
+    });
     t.fail("Expected createService to throw an error");
   } catch (error) {
     // Assert that the API returns a 400 error for invalid email format

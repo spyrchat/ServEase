@@ -9,7 +9,7 @@ let services = [
     userType: "service",
     serviceType: "Plumbing",
     description: "Expert plumbing services.",
-    city: "Los Angeles",
+    city: "Los+Angeles",
     address: "456 Elm Street",
     country: "USA",
     postalCode: 90001,
@@ -346,7 +346,12 @@ exports.deleteService = function (serviceId) {
  * returns List
  **/
 
-exports.searchServices = function (search, typeFilter, locationFilter, ratingFilter) {
+exports.searchServices = function (
+  search,
+  typeFilter,
+  locationFilter,
+  ratingFilter
+) {
   return new Promise((resolve, reject) => {
     try {
       if (!Array.isArray(services)) {
@@ -384,10 +389,15 @@ exports.searchServices = function (search, typeFilter, locationFilter, ratingFil
       }
 
       if (ratingFilter !== undefined) {
-        if (typeof ratingFilter !== "number" || ratingFilter < 1 || ratingFilter > 5) {
+        if (
+          typeof ratingFilter !== "number" ||
+          ratingFilter < 1 ||
+          ratingFilter > 5
+        ) {
           return reject(
             respondWithCode(400, {
-              message: "Invalid 'ratingFilter'. It must be a number between 1 and 5.",
+              message:
+                "Invalid 'ratingFilter'. It must be a number between 1 and 5.",
             })
           );
         }

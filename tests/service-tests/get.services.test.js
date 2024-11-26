@@ -33,7 +33,7 @@ test("Unit Test GET /services - Successful search with valid filters", async (t)
   const filters = {
     search: "Plumbing",
     typeFilter: "Plumbing",
-    locationFilter: "Los Angeles",
+    locationFilter: "Los+Angeles",
     ratingFilter: 4,
   };
 
