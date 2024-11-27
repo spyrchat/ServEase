@@ -1,5 +1,5 @@
 "use strict";
-
+const { respondWithCode } = require("../utils/writer");
 let services = [
   {
     serviceId: 1,
@@ -18,7 +18,49 @@ let services = [
       {
         availability: true,
         date: "2023-12-01",
-        startingTime: "09:00",
+        startingTime: "09:00:00",
+      },
+    ],
+  },
+  {
+    serviceId: 2,
+    userType: "service",
+    serviceType: "Electrician",
+    description: "Professional electrical services for homes and offices.",
+    city: "New York",
+    address: "123 Maple Avenue",
+    country: "USA",
+    postalCode: 10001,
+    email: "electrician.pro@example.com",
+    phone: "1234567890",
+    rating: 4.7,
+    serviceImg: "binaryImageData",
+    availableTimeSlots: [
+      {
+        availability: true,
+        date: "2023-12-02",
+        startingTime: "10:00:00",
+      },
+    ],
+  },
+  {
+    serviceId: 3,
+    userType: "service",
+    serviceType: "Cleaning",
+    description: "Reliable and affordable cleaning services.",
+    city: "Chicago",
+    address: "789 Oak Lane",
+    country: "USA",
+    postalCode: 60601,
+    email: "cleaning.services@example.com",
+    phone: "1122334455",
+    rating: 4.3,
+    serviceImg: "binaryImageData",
+    availableTimeSlots: [
+      {
+        availability: true,
+        date: "2023-12-03",
+        startingTime: "11:00:00",
       },
     ],
   },
@@ -115,7 +157,7 @@ exports.createService = function (body) {
       }
 
       const newService = {
-        serviceId: Math.floor(Math.random() * 1000) + 1, 
+        serviceId: Math.floor(Math.random() * 1000) + 1,
         ...body,
       };
 
@@ -192,25 +234,44 @@ exports.editService = function (body, serviceId) {
   return new Promise(function (resolve, reject) {
     try {
       // Validate that serviceId is provided and is a valid integer
-      if (
-        serviceId === undefined ||
-        serviceId === null ||
-        typeof serviceId !== "number" ||
-        !Number.isInteger(serviceId) ||
-        serviceId <= 0
-      ) {
+      if (serviceId <= 0) {
         return reject(
           respondWithCode(400, {
             message: "'serviceId' must be a positive integer.",
           })
         );
       }
-      
-      // Validate that body is provided   
-      if (!body) {
+      if (serviceId !== body.serviceId) {
         return reject(
           respondWithCode(400, {
-            message: "Invalid service data. 'body' is required.",
+            message: "'serviceId' in path must match serviceId in body.",
+          })
+        );
+      }
+
+      // Check if body exists and has the required properties
+      const requiredFields = [
+        "userType",
+        "serviceType",
+        "description",
+        "city",
+        "address",
+        "country",
+        "postalCode",
+        "email",
+        "phone",
+        "rating",
+        "serviceImg",
+        "availableTimeSlots",
+      ];
+
+      // Validate required fields
+      const missingFields = requiredFields.filter((field) => !body[field]);
+
+      if (missingFields.length > 0) {
+        return reject(
+          respondWithCode(422, {
+            message: `Missing required fields: ${missingFields.join(", ")}`,
           })
         );
       }
@@ -272,11 +333,7 @@ exports.editService = function (body, serviceId) {
       // Return the updated service
       resolve(service);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -292,13 +349,7 @@ exports.deleteService = function (serviceId) {
   return new Promise(function (resolve, reject) {
     try {
       // Validate that serviceId is provided and is a valid integer
-      if (
-        serviceId === undefined ||
-        serviceId === null ||
-        typeof serviceId !== "number" ||
-        !Number.isInteger(serviceId) ||
-        serviceId <= 0
-      ) {
+      if (serviceId <= 0) {
         return reject(
           respondWithCode(400, {
             message: "'serviceId' must be a positive integer.",
@@ -321,11 +372,7 @@ exports.deleteService = function (serviceId) {
         );
       }
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -411,13 +458,13 @@ exports.searchServices = function (
         }
         filters.ratingFilter = ratingFilter;
       }
-      
+
       // Selecting random service objects for illustration purposes
       const results = services
         .sort(() => 0.5 - Math.random())
         .slice(0, Math.random() % 2);
-      
-        if (results.length > 0) {
+
+      if (results.length > 0) {
         // Found matching services
         resolve(results);
       } else {
