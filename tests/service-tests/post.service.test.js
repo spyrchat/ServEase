@@ -28,9 +28,19 @@ test.after.always(async (t) => {
 });
 
 /**
- * Tests successful creation of a service [HAPPY PATH].
+ * Unit Tests for POST /services API route:
+ * 1. Successful creation of service
+ * 2. Unsuccessful creation of service: invalid userType
+ * 3. Unsuccessful creation of service: missing required fields
+ * 4. Unsuccessful creation of service: phone number exceeds character limit
+ * 5. Unsuccessful creation of service: invalid rating
+ * 6. Unsuccessful creation of service: invalid email format
  */
-test("createService - Should succeed with valid data", async (t) => {
+
+/**
+ * 1. Successful creation of service [HAPPY PATH]
+ */
+test("POST /services - Successful creation of service", async (t) => {
   let body = {
     userType: "service",
     serviceType: "doctor",
@@ -48,27 +58,21 @@ test("createService - Should succeed with valid data", async (t) => {
     ],
   };
 
-  // Make the POST request to create a service
   const serviceResponse = await t.context.got.post("services", { json: body });
 
-  // Assert that the response status is 200 OK
   t.is(
     serviceResponse.statusCode,
     200,
     "Service creation should return status 200"
   );
-
-  // Assert that the response body is present
   t.truthy(serviceResponse.body, "Body should be present");
-
-  // Assert that the response body contains a valid service ID
   t.truthy(serviceResponse.body.serviceId, "Service ID should be present");
 });
 
 /**
- * Tests creation of a service with an invalid userType [UNHAPPY PATH].
+ * 2. Unsuccessful creation of service: invalid userType [UNHAPPY PATH]
  */
-test("createService - Invalid UserType", async (t) => {
+test("POST /services - Invalid userType", async (t) => {
   let body = {
     userType: "client", // Invalid userType
     serviceType: "doctor",
@@ -85,12 +89,9 @@ test("createService - Invalid UserType", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", {
-      json: body,
-    });
+    await t.context.got.post("services", { json: body });
     t.fail("Expected createService to throw an error");
   } catch (error) {
-    // Assert that the API returns a 400 error for invalid userType
     t.is(error.response.statusCode, 400);
     t.is(
       error.response.body.message,
@@ -100,9 +101,9 @@ test("createService - Invalid UserType", async (t) => {
 });
 
 /**
- * Tests creation of a service with missing required fields [UNHAPPY PATH].
+ * 3. Unsuccessful creation of service: missing required fields [UNHAPPY PATH]
  */
-test("createService - Missing Required Fields", async (t) => {
+test("POST /services - Missing required fields", async (t) => {
   let body = {
     userType: "service",
     serviceType: "doctor",
@@ -119,12 +120,9 @@ test("createService - Missing Required Fields", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", {
-      json: body,
-    });
+    await t.context.got.post("services", { json: body });
     t.fail("Expected createService to throw an error");
   } catch (error) {
-    // Assert that the API returns a 400 error for missing required fields
     t.is(error.response.statusCode, 400);
     t.is(
       error.response.body.message,
@@ -134,9 +132,9 @@ test("createService - Missing Required Fields", async (t) => {
 });
 
 /**
- * Tests creation of a service with a phone number exceeding the character limit [UNHAPPY PATH].
+ * 4. Unsuccessful creation of service: phone number exceeds character limit [UNHAPPY PATH]
  */
-test("createService - Phone Number Exceeds Limit", async (t) => {
+test("POST /services - Phone number exceeds character limit", async (t) => {
   let body = {
     userType: "service",
     serviceType: "doctor",
@@ -153,12 +151,9 @@ test("createService - Phone Number Exceeds Limit", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", {
-      json: body,
-    });
+    await t.context.got.post("services", { json: body });
     t.fail("Expected createService to throw an error");
   } catch (error) {
-    // Assert that the API returns a 400 error for exceeding phone character limit
     t.is(error.response.statusCode, 400);
     t.is(
       error.response.body.message,
@@ -168,9 +163,9 @@ test("createService - Phone Number Exceeds Limit", async (t) => {
 });
 
 /**
- * Tests creation of a service with an invalid rating [UNHAPPY PATH].
+ * 5. Unsuccessful creation of service: invalid rating [UNHAPPY PATH]
  */
-test("createService - Invalid Rating", async (t) => {
+test("POST /services - Invalid rating", async (t) => {
   let body = {
     userType: "service",
     serviceType: "doctor",
@@ -187,21 +182,18 @@ test("createService - Invalid Rating", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", {
-      json: body,
-    });
+    await t.context.got.post("services", { json: body });
     t.fail("Expected createService to throw an error");
   } catch (error) {
-    // Assert that the API returns a 400 error for invalid rating
     t.is(error.response.statusCode, 400);
     t.is(error.response.body.message, "request.body.rating should be <= 5");
   }
 });
 
 /**
- * Tests creation of a service with an invalid email format [UNHAPPY PATH].
+ * 6. Unsuccessful creation of service: invalid email format [UNHAPPY PATH]
  */
-test("createService - Invalid Email Format", async (t) => {
+test("POST /services - Invalid email format", async (t) => {
   let body = {
     userType: "service",
     serviceType: "doctor",
@@ -218,12 +210,9 @@ test("createService - Invalid Email Format", async (t) => {
   };
 
   try {
-    const serviceResponse = await t.context.got.post("services", {
-      json: body,
-    });
+    await t.context.got.post("services", { json: body });
     t.fail("Expected createService to throw an error");
   } catch (error) {
-    // Assert that the API returns a 400 error for invalid email format
     t.is(error.response.statusCode, 400);
     t.is(error.response.body.message, "Invalid email format.");
   }

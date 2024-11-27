@@ -125,22 +125,11 @@ exports.createService = function (body) {
       // Return the created service
       resolve(newService);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
 
-/**
- * Get a service
- * FR-5 The client must be able to access a service's information, FR-9 The professional must be able to edit his service's information
- *
- * serviceId Integer The service's id
- * returns Service
- **/
 /**
  * Get a service
  * FR-5 The client must be able to access a service's information, FR-9 The professional must be able to edit his service's information
@@ -171,11 +160,7 @@ exports.getService = function (serviceId) {
 
       resolve(service);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -271,11 +256,7 @@ exports.editService = function (body, serviceId) {
       // Return the updated service
       resolve(service);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -320,11 +301,7 @@ exports.deleteService = function (serviceId) {
         );
       }
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -405,11 +382,7 @@ exports.searchServices = function (
 
       resolve(results);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };

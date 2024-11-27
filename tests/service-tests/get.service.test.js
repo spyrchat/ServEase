@@ -43,9 +43,17 @@ global.services = [
 ];
 
 /**
- * Tests: Retrieve existing service by valid ID [HAPPY PATH]
+ * Unit Tests for GET /services/{serviceId} API route implemented:
+ * 1. Retrieve existing service by valid ID
+ * 2. Retrieve service with non-existing serviceId
+ * 3. Retrieve service with invalid (non-integer) serviceId
+ * 4. Retrieve service with invalid (negative) serviceId
  */
-test("[HAPPY PATH] GET /services/{serviceId} - Retrieve existing service", async (t) => {
+
+/**
+ * 1. Retrieve existing service by valid ID [HAPPY PATH]
+ */
+test("[HAPPY PATH] GET /services/{serviceId} - Retrieve existing service by valid ID", async (t) => {
   const serviceId = 1; // Assuming this serviceId exists in the mock data.
 
   const response = await t.context.got.get(`services/${serviceId}`);
@@ -60,9 +68,9 @@ test("[HAPPY PATH] GET /services/{serviceId} - Retrieve existing service", async
 });
 
 /**
- * Tests: Retrieve service with non-existing serviceId [UNHAPPY PATH]
+ * 2. Retrieve service with non-existing serviceId [UNHAPPY PATH]
  */
-test("[UNHAPPY PATH] GET /services/{serviceId} - Non-existing serviceId", async (t) => {
+test("[UNHAPPY PATH] GET /services/{serviceId} - Retrieve service with non-existing serviceId", async (t) => {
   const serviceId = 999; // Assuming this serviceId does not exist.
 
   const error = await t.throwsAsync(
@@ -85,9 +93,9 @@ test("[UNHAPPY PATH] GET /services/{serviceId} - Non-existing serviceId", async 
 });
 
 /**
- * Tests: Retrieve service with invalid (non-integer) serviceId [UNHAPPY PATH]
+ * 3. Retrieve service with invalid (non-integer) serviceId [UNHAPPY PATH]
  */
-test("[UNHAPPY PATH] GET /services/{serviceId} - Invalid (non-integer) serviceId", async (t) => {
+test("[UNHAPPY PATH] GET /services/{serviceId} - Retrieve service with invalid (non-integer) serviceId", async (t) => {
   const serviceId = "abc";
 
   const error = await t.throwsAsync(
@@ -110,9 +118,9 @@ test("[UNHAPPY PATH] GET /services/{serviceId} - Invalid (non-integer) serviceId
 });
 
 /**
- * Tests: Retrieve service with invalid (negative) serviceId [UNHAPPY PATH]
+ * 4. Retrieve service with invalid (negative) serviceId [UNHAPPY PATH]
  */
-test("[UNHAPPY PATH] GET /services/{serviceId} - Invalid (negative) serviceId", async (t) => {
+test("[UNHAPPY PATH] GET /services/{serviceId} - Retrieve service with invalid (negative) serviceId", async (t) => {
   const serviceId = -1;
 
   const error = await t.throwsAsync(
