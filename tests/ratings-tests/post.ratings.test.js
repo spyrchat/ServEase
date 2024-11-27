@@ -34,7 +34,7 @@ test.after.always(async (t) => {
 /**
  * Tests successful creation of a rating  [HAPPY PATH].
  */
-test("createRating - Successful rating creation", async (t) => {
+test("createRating - Successful creation of rating", async (t) => {
 
     try{ 
         // Suppose client and service with the following ids exist

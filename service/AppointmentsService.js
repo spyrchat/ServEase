@@ -91,12 +91,8 @@ exports.createAppointment = function (body) {
 
       // Return the created appointment
       resolve(newAppointment);
-    } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+    } catch (error) { 
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -156,11 +152,7 @@ exports.editServiceAppointment = function (body, appointmentId) {
       // Return the updated appointment
       resolve(appointmentResponse);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject( respondWithCode(500, { message: "Internal Server Error",}));
     }
   });
 };

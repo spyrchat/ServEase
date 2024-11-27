@@ -76,11 +76,7 @@ exports.createRating = function (body, serviceId) {
       // Return the created rating
       resolve(newRating);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -123,11 +119,7 @@ exports.getServiceRatings = function (serviceId) {
       });
       }
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
