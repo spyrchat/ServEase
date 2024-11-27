@@ -13,34 +13,28 @@ exports.createClient = function (body) {
   return new Promise(function (resolve, reject) {
     try {
       // Check if body exists and has the required properties
-      if (
-        !body ||
-        body.userType !== "client" ||
-        !body.personalInfo ||
-        !Array.isArray(body.personalInfo) ||
-        body.personalInfo.length === 0
-      ) {
+      if (body.userType !== "client") {
         return reject(
           respondWithCode(400, {
-            message:
-              "Invalid client data. 'userType' must be 'client' and 'personalInfo' is required.",
+            message: "Invalid client data. 'userType' must be 'client'.",
           })
         );
       }
 
-      const personalInfo = body.personalInfo[0];
+      const personalInfo = body.personalInfo;
 
       // Required fields
       const requiredFields = [
-        "email",
-        "firstName",
-        "lastName",
+        "address",
         "city",
         "country",
-        "postalCode",
-        "phone",
-        "address",
+        "email",
+        "country",
+        "firstName",
+        "lastName",
         "password",
+        "phone",
+        "postalCode",
       ];
 
       // Validate required fields
@@ -59,7 +53,7 @@ exports.createClient = function (body) {
       // Email must contain '@'
       if (!personalInfo.email.includes("@")) {
         return reject(
-          respondWithCode(400, {
+          respondWithCode(422, {
             message: "Invalid email format.",
           })
         );
@@ -81,18 +75,14 @@ exports.createClient = function (body) {
       };
 
       // Do not include password in the response
-      if (newClient.personalInfo && newClient.personalInfo[0]) {
-        delete newClient.personalInfo[0].password;
+      if (newClient.personalInfo) {
+        delete newClient.personalInfo.password;
       }
 
       // Return the created client
       resolve(newClient);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };

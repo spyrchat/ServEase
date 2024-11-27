@@ -2,7 +2,7 @@
 const { respondWithCode } = require("../utils/writer");
 
 // Example in-memory data store
-let ratings = [
+const ratings = [
   {
     clientId: 1,
     serviceId: 1,
@@ -22,7 +22,6 @@ let ratings = [
     serviceId: 2,
     stars: 4,
     date: "2020-11-15",
-    review: "Very professional.",
   },
 ];
 
@@ -41,22 +40,13 @@ let services = [{ serviceId: 1 }, { serviceId: 2 }, { serviceId: 3 }];
 exports.createRating = function (body, serviceId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate 'stars'
-      if (body.stars < 1 || body.stars > 5) {
-        return reject(
-          respondWithCode(400, {
-            message: "'stars' must be an integer between 1 and 5.",
-          })
-        );
-      }
-
       // Check if client exists
       const client = clients.find((client) => client.clientId === body.clientId);
 
       if (!client) {
         return reject(
           respondWithCode(404, {
-            message: "No client found with clientId: ${body.clientId}",
+            message: `No client found with clientId: ${body.clientId}`,
           })
         );
       }
@@ -69,7 +59,7 @@ exports.createRating = function (body, serviceId) {
       if (!service) {
         return reject(
           respondWithCode(404, {
-            message: "No service found with serviceId: ${serviceId}",
+            message: `No service found with serviceId: ${serviceId}`,
           })
         );
       }
@@ -86,11 +76,7 @@ exports.createRating = function (body, serviceId) {
       // Return the created rating
       resolve(newRating);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -113,13 +99,13 @@ exports.getServiceRatings = function (serviceId) {
       if (!service) {
         return reject(
           respondWithCode(404, {
-            message: "No service found with serviceId: ${serviceId}",
+            message: `No service found with serviceId: ${serviceId}`,
           })
         );
       }
 
       // Retrieve ratings for the service
-      const serviceRatings = ratings.find(
+      const serviceRatings = ratings.filter(
         (ratings) => ratings.serviceId === serviceId
       );
 
@@ -127,14 +113,13 @@ exports.getServiceRatings = function (serviceId) {
       if (serviceRatings && serviceRatings.length > 0) {
         resolve(serviceRatings);
       } else {
-        resolve([]);
+        resolve({
+          message: "No ratings yet for this service.",
+          data: []
+      });
       }
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
