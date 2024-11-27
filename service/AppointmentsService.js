@@ -13,13 +13,11 @@ let appointments = [
     serviceId: 1,
     serviceDetails: "Need to fix my fridge",
     status: "Confirmation Pending",
-    timeSlot: [
-      {
-        availability: true,
-        date: "2024-12-20",
-        startingTime: "15:00:00",
-      },
-    ],
+    timeSlot: {
+      availability: true,
+      date: "2024-12-20",
+      startingTime: "15:00:00",
+    },
   },
   {
     appointmentId: 2,
@@ -27,13 +25,11 @@ let appointments = [
     serviceId: 2,
     serviceDetails: "Need to check my health, I am sick",
     status: "Confirmation Pending",
-    timeSlot: [
-      {
-        availability: true,
-        date: "2024-12-20",
-        startingTime: "18:00:00",
-      },
-    ],
+    timeSlot: {
+      availability: true,
+      date: "2024-12-20",
+      startingTime: "18:00:00",
+    },
   },
   {
     appointmentId: 3,
@@ -41,13 +37,11 @@ let appointments = [
     serviceId: 2,
     serviceDetails: "Need to check my son's health",
     status: "Confirmation Pending",
-    timeSlot: [
-      {
-        availability: true,
-        date: "2024-12-20",
-        startingTime: "19:00:00",
-      },
-    ],
+    timeSlot: {
+      availability: true,
+      date: "2024-12-20",
+      startingTime: "19:00:00",
+    },
   },
 ];
 
@@ -98,11 +92,7 @@ exports.createAppointment = function (body) {
       // Return the created appointment
       resolve(newAppointment);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, { message: "Internal Server Error" }));
     }
   });
 };
@@ -118,6 +108,15 @@ exports.createAppointment = function (body) {
 exports.editServiceAppointment = function (body, appointmentId) {
   return new Promise(function (resolve, reject) {
     try {
+      // Check appointmentId is positive integer
+      if (appointmentId <= 0) {
+        return reject(
+          respondWithCode(400, {
+            message: "appointmentId must be positive integer",
+          })
+        );
+      }
+
       // Fetch the existing appointment
       const appointment = appointments.find(
         (appointment) => appointment.appointmentId === appointmentId
@@ -148,11 +147,7 @@ exports.editServiceAppointment = function (body, appointmentId) {
       // Return the updated appointment
       resolve(appointmentResponse);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, { message: "Internal Server Error" }));
     }
   });
 };
@@ -167,6 +162,15 @@ exports.editServiceAppointment = function (body, appointmentId) {
 exports.getAppointment = function (appointmentId) {
   return new Promise(function (resolve, reject) {
     try {
+      // Check appointmentId is positive integer
+      if (appointmentId <= 0) {
+        return reject(
+          respondWithCode(400, {
+            message: "appointmentId must be positive integer",
+          })
+        );
+      }
+
       // Find appointment by appointment id
       const appointment = appointments.find(
         (appointment) => appointment.appointmentId === appointmentId
@@ -184,11 +188,7 @@ exports.getAppointment = function (appointmentId) {
       // Return appointment
       resolve(appointment);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, { message: "Internal Server Error" }));
     }
   });
 };
@@ -204,6 +204,24 @@ exports.getAppointment = function (appointmentId) {
 exports.getClientAppointments = function (clientId, serviceId) {
   return new Promise((resolve, reject) => {
     try {
+      // Check clientId is positive integer
+      if (clientId <= 0) {
+        return reject(
+          respondWithCode(400, {
+            message: "clientId must be positive integer",
+          })
+        );
+      }
+
+      // Check serviceId is positive integer
+      if (serviceId <= 0) {
+        return reject(
+          respondWithCode(400, {
+            message: "serviceId must be positive integer",
+          })
+        );
+      }
+      
       let results = appointments;
 
       // Apply clientId filter if provided
@@ -220,13 +238,10 @@ exports.getClientAppointments = function (clientId, serviceId) {
         );
       }
 
+      // Return results
       resolve(results);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, { message: "Internal Server Error" }));
     }
   });
 };

@@ -660,7 +660,7 @@ components:
       type: object
       properties:
         timeSlot:
-          type: array
+          type: object
           description: The timeslot for this specific appointment
           items:
             $ref: '#/components/schemas/TimeSlot'
