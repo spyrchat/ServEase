@@ -180,7 +180,6 @@ exports.createService = function (body) {
 exports.getService = function (serviceId) {
   return new Promise((resolve, reject) => {
     try {
-      console.log("Services array:", services); // Log the services array
       if (!Number.isInteger(serviceId) || serviceId <= 0) {
         return reject(
           respondWithCode(400, {

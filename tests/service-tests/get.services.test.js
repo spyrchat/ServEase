@@ -128,8 +128,6 @@ test("[UNHAPPY PATH] GET /services - Invalid 'ratingFilter' (out of range)", asy
     });
     t.fail("Expected request to throw an HTTPError");
   } catch (error) {
-    console.error("Error response:", error.response?.body || error.message);
-
     t.is(
       error.response?.statusCode,
       400,
@@ -155,8 +153,6 @@ test("[UNHAPPY PATH] GET /services - Invalid 'ratingFilter' (not a number)", asy
     });
     t.fail("Expected request to throw an HTTPError");
   } catch (error) {
-    console.error("Error response:", error.response?.body || error.message);
-
     t.is(
       error.response?.statusCode,
       400,
