@@ -1,12 +1,13 @@
 "use strict";
 const { respondWithCode } = require("../utils/writer");
+
 let services = [
   {
     serviceId: 1,
     userType: "service",
     serviceType: "Plumbing",
     description: "Expert plumbing services.",
-    city: "Los Angeles",
+    city: "Los+Angeles",
     address: "456 Elm Street",
     country: "USA",
     postalCode: 90001,
@@ -164,11 +165,7 @@ exports.createService = function (body) {
       // Return the created service
       resolve(newService);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -181,44 +178,29 @@ exports.createService = function (body) {
  * returns Service
  **/
 exports.getService = function (serviceId) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      // Validate that serviceId is provided and is a valid integer
-      if (
-        serviceId === undefined ||
-        serviceId === null ||
-        isNaN(serviceId) ||
-        parseInt(serviceId) <= 0
-      ) {
+      console.log("Services array:", services); // Log the services array
+      if (!Number.isInteger(serviceId) || serviceId <= 0) {
         return reject(
           respondWithCode(400, {
-            message: "Invalid 'serviceId'. It must be a positive integer.",
+            message: "'serviceId' must be a positive integer.",
           })
         );
       }
 
-      const service = services.find(
-        (service) => service.serviceId === serviceId
-      );
-
+      const service = services.find((s) => s.serviceId === serviceId);
       if (!service) {
         return reject(
           respondWithCode(404, {
-            message: `No service found with serviceId: ${id}.`,
+            message: `No service found with serviceId: ${serviceId}.`,
           })
         );
       }
 
-      const serviceResponse = { ...service };
-
-      // Return the service data
-      resolve(serviceResponse);
+      resolve(service);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -241,6 +223,7 @@ exports.editService = function (body, serviceId) {
           })
         );
       }
+
       if (serviceId !== body.serviceId) {
         return reject(
           respondWithCode(400, {
@@ -394,87 +377,66 @@ exports.searchServices = function (
   locationFilter,
   ratingFilter
 ) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      const filters = {};
-
-      // Validate and assign 'search' filter
-      if (search !== undefined) {
-        if (typeof search !== "string" || search.trim() === "") {
-          {
-            return reject(
-              respondWithCode(400, {
-                message: `Invalid 'search'. It must be a non-empty string.`,
-              })
-            );
-          }
-        }
-        filters.search = search.trim();
+      if (!Array.isArray(services)) {
+        return reject(
+          respondWithCode(500, {
+            message: "Internal Server Error: Services data is invalid.",
+          })
+        );
       }
 
-      // Validate and assign 'typeFilter'
-      if (typeFilter !== undefined) {
-        if (typeof typeFilter !== "string" || typeFilter.trim() === "") {
-          return reject(
-            respondWithCode(400, {
-              message: `Invalid 'typeFilter'. It must be a non-empty string.`,
-            })
-          );
-        }
+      let results = [...services];
 
-        filters.typeFilter = typeFilter.trim();
+      // Apply filters if provided
+      if (search?.trim()) {
+        const lowerSearch = search.trim().toLowerCase();
+        results = results.filter(
+          (service) =>
+            service?.serviceType?.toLowerCase().includes(lowerSearch) ||
+            service?.description?.toLowerCase().includes(lowerSearch)
+        );
       }
 
-      // Validate and assign 'locationFilter'
-      if (locationFilter !== undefined) {
-        if (
-          typeof locationFilter !== "string" ||
-          locationFilter.trim() === ""
-        ) {
-          return reject(
-            respondWithCode(400, {
-              message:
-                "Invalid 'locationFilter'. It must be a non-empty string.",
-            })
-          );
-        }
-        filters.locationFilter = locationFilter.trim();
+      if (typeFilter?.trim()) {
+        const lowerTypeFilter = typeFilter.trim().toLowerCase();
+        results = results.filter(
+          (service) => service?.serviceType?.toLowerCase() === lowerTypeFilter
+        );
       }
 
-      // Validate and assign 'ratingFilter'
+      if (locationFilter?.trim()) {
+        const lowerLocationFilter = locationFilter.trim().toLowerCase();
+        results = results.filter(
+          (service) => service?.city?.toLowerCase() === lowerLocationFilter
+        );
+      }
+
       if (ratingFilter !== undefined) {
         if (
           typeof ratingFilter !== "number" ||
-          !Number.isInteger(ratingFilter) ||
           ratingFilter < 1 ||
           ratingFilter > 5
         ) {
           return reject(
             respondWithCode(400, {
               message:
-                "Invalid 'ratingFilter'. It must be an integer between 1 and 5.",
+                "Invalid 'ratingFilter'. It must be a number between 1 and 5.",
             })
           );
         }
-        filters.ratingFilter = ratingFilter;
+        results = results.filter((service) => service?.rating >= ratingFilter);
       }
 
-      // Selecting random service objects for illustration purposes
-      const results = services
-        .sort(() => 0.5 - Math.random())
-        .slice(0, Math.random() % 2);
-
-      if (results.length > 0) {
-        // Found matching services
-        resolve(results);
-      } else {
-        resolve([]);
+      // Return 204 if no results are found
+      if (results.length === 0) {
+        return resolve(respondWithCode(204, null));
       }
+
+      resolve(results);
     } catch (error) {
-      reject({
-        statusCode: 500,
-        message: "Internal Server Error",
-      });
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
