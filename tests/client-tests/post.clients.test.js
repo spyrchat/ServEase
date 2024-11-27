@@ -30,7 +30,7 @@ test.after.always(async (t) => {
 /**
  * Tests successful creation of a client [HAPPY PATH].
  */
-test("createClient - Should succeed with valid data", async (t) => {
+test("Successful creation of client", async (t) => {
   let body = {
     userType: "client",
     personalInfo: {
@@ -66,7 +66,7 @@ test("createClient - Should succeed with valid data", async (t) => {
 /**
  * Tests creation of a client with an invalid userType [UNHAPPY PATH].
  */
-test("createClient - Invalid UserType", async (t) => {
+test("Unsuccessful creation of client: Invalid userType", async (t) => {
   let body = {
     userType: "servie", // Invalid userType
     personalInfo: {
@@ -99,7 +99,7 @@ test("createClient - Invalid UserType", async (t) => {
 /**
  * Tests creation of a client with a mismatched userType [UNHAPPY PATH].
  */
-test("createClient - Mismatched UserType", async (t) => {
+test("Unsuccessful creation of client: Mismatched userType", async (t) => {
   let body = {
     userType: "service", // Incorrect userType
     personalInfo: {
@@ -132,7 +132,7 @@ test("createClient - Mismatched UserType", async (t) => {
 /**
  * Tests creation of a client without personalInfo [UNHAPPY PATH].
  */
-test("createClient - Delete Personal Info", async (t) => {
+test("Unsuccessful creation of client: Personal info not provided", async (t) => {
   let body = {
     userType: "client", // Missing personalInfo
   };
@@ -154,7 +154,7 @@ test("createClient - Delete Personal Info", async (t) => {
 /**
  * Tests creation of a client with empty required fields in personalInfo [UNHAPPY PATH].
  */
-test("createClient - Empty String in Required Fields - PersonalInfo", async (t) => {
+test("Unsuccessful creation of client: Empty required fields in personal info", async (t) => {
   let body = {
     userType: "client",
     personalInfo: {
@@ -187,7 +187,7 @@ test("createClient - Empty String in Required Fields - PersonalInfo", async (t) 
 /**
  * Tests creation of a client with a phone number exceeding the character limit [UNHAPPY PATH].
  */
-test("createClient - Phone Number Exceeds Limit", async (t) => {
+test("Unsuccessful creation of client: Phone number exceeds limit", async (t) => {
   let body = {
     userType: "client",
     personalInfo: {
@@ -220,7 +220,7 @@ test("createClient - Phone Number Exceeds Limit", async (t) => {
 /**
  * Tests creation of a client with an invalid email format [UNHAPPY PATH].
  */
-test("createClient - Invalid Email Format", async (t) => {
+test("Unsuccessful creation of client: Invalid email format", async (t) => {
   let body = {
     userType: "client",
     personalInfo: {

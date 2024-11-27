@@ -30,7 +30,7 @@ test.after.always(async (t) => {
 /**
  * Tests successful modification of a service [HAPPY PATH].
  */
-test("Modify a service successfully", async (t) => {
+test("Successful modification of service", async (t) => {
   const serviceId = 1;
   let body = {
     serviceId: 1,
@@ -70,7 +70,7 @@ test("Modify a service successfully", async (t) => {
 /**
  * Tests modification with non-matching serviceId in path and body [UNHAPPY PATH].
  */
-test("Non matching ids in path and body", async (t) => {
+test("Unsuccessful modification of service: Non-matching serviceId in path and body", async (t) => {
   const serviceId = 2;
   let body = {
     serviceId: 1,
@@ -113,7 +113,7 @@ test("Non matching ids in path and body", async (t) => {
 /**
  * Tests modification with negative serviceId in path [UNHAPPY PATH].
  */
-test("Negative id in path", async (t) => {
+test("Unsuccessful modification of service: Negative serviceId in path", async (t) => {
   const serviceId = -2;
   let body = {
     serviceId: -2,
@@ -156,7 +156,7 @@ test("Negative id in path", async (t) => {
 /**
  * Tests modification with missing required fields in the body [UNHAPPY PATH].
  */
-test("Missing Required Fields", async (t) => {
+test("Unsuccessful modification of service: Missing required fields", async (t) => {
   const serviceId = 1;
   let body = {
     serviceId: 1,
@@ -198,7 +198,7 @@ test("Missing Required Fields", async (t) => {
 /**
  * Tests modification with empty required fields in the body [UNHAPPY PATH].
  */
-test("Empty Required Fields", async (t) => {
+test("Unsuccessful modification of service: Empty required fields", async (t) => {
   const serviceId = 1;
   let body = {
     serviceId: 1,
@@ -238,7 +238,7 @@ test("Empty Required Fields", async (t) => {
 /**
  * Tests modification with no matching service in the database [UNHAPPY PATH].
  */
-test("No matching service object in database", async (t) => {
+test("Unsuccessful modification of service: No matching service in database", async (t) => {
   const serviceId = 5;
   let body = {
     serviceId: 5,
@@ -281,7 +281,7 @@ test("No matching service object in database", async (t) => {
 /**
  * Tests modification with description exceeding 300 characters [UNHAPPY PATH].
  */
-test("Description surpassing 300 characters", async (t) => {
+test("Unsuccessful modification of service: Description exceeds 300 characters", async (t) => {
   const serviceId = 1;
   let body = {
     serviceId: 1,
@@ -324,7 +324,7 @@ test("Description surpassing 300 characters", async (t) => {
 /**
  * Tests modification with phone number exceeding 10 characters [UNHAPPY PATH].
  */
-test("Phone Number surpassing 10 digits", async (t) => {
+test("Unsuccessful modification of service: Phone number exceeds 10 characters", async (t) => {
   const serviceId = 1;
   let body = {
     serviceId: 1,

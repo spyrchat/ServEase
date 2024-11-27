@@ -30,7 +30,7 @@ test.after.always(async (t) => {
 /**
  * Tests successful deletion of a service [HAPPY PATH].
  */
-test("Delete a service successfully", async (t) => {
+test("Successful deletion of service", async (t) => {
   const serviceId = 1;
 
   // Make the DELETE request to delete a service
@@ -47,7 +47,7 @@ test("Delete a service successfully", async (t) => {
 /**
  * Tests deletion with an undefined serviceId in the path [UNHAPPY PATH].
  */
-test("Undefined serviceId in path", async (t) => {
+test("Unsuccessful deletion of service: Undefined serviceId in path", async (t) => {
   const serviceId = undefined;
 
   // Attempt to delete a service with an undefined serviceId
@@ -67,7 +67,7 @@ test("Undefined serviceId in path", async (t) => {
 /**
  * Tests deletion with a null serviceId in the path [UNHAPPY PATH].
  */
-test("Null serviceId in path", async (t) => {
+test("Unsuccessful deletion of service: Null serviceId in path", async (t) => {
   const serviceId = null;
 
   // Attempt to delete a service with a null serviceId
@@ -87,7 +87,7 @@ test("Null serviceId in path", async (t) => {
 /**
  * Tests deletion with a negative serviceId in the path [UNHAPPY PATH].
  */
-test("Negative serviceId in path", async (t) => {
+test("Unsuccessful deletion of service: Negative serviceId in path", async (t) => {
   const serviceId = -2;
 
   // Attempt to delete a service with a negative serviceId
@@ -107,7 +107,7 @@ test("Negative serviceId in path", async (t) => {
 /**
  * Tests deletion with a non-existent serviceId in the path [UNHAPPY PATH].
  */
-test("Non existent serviceId", async (t) => {
+test("Unsuccessful deletion of service: Non-existent service (serviceId)", async (t) => {
   const serviceId = 5;
 
   // Attempt to delete a non-existent service
