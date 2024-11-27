@@ -108,15 +108,6 @@ exports.createAppointment = function (body) {
 exports.editServiceAppointment = function (body, appointmentId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Check appointmentId is positive integer
-      if (appointmentId <= 0) {
-        return reject(
-          respondWithCode(400, {
-            message: "appointmentId must be positive integer",
-          })
-        );
-      }
-
       // Fetch the existing appointment
       const appointment = appointments.find(
         (appointment) => appointment.appointmentId === appointmentId
@@ -127,6 +118,20 @@ exports.editServiceAppointment = function (body, appointmentId) {
         return reject(
           respondWithCode(404, {
             message: `No appointment found with appointmentId: ${appointmentId}`,
+          })
+        );
+      }
+
+      // Validate that non-updatable fields are not being modified
+      const nonUpdatableFields = ["appointmentId", "clientId", "serviceId"];
+      const changedFields = nonUpdatableFields.filter(
+        (field) => body[field] !== undefined && body[field] !== appointment[field]
+      );
+
+      if (changedFields.length > 0) {
+        return reject(
+          respondWithCode(400, {
+            message: `The following fields cannot be updated: ${changedFields.join( ", ")}.`,
           })
         );
       }
