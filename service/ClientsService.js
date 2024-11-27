@@ -13,13 +13,10 @@ exports.createClient = function (body) {
   return new Promise(function (resolve, reject) {
     try {
       // Check if body exists and has the required properties
-      if (
-        body.userType !== "client" 
-      ) {
+      if (body.userType !== "client") {
         return reject(
           respondWithCode(400, {
-            message:
-              "Invalid client data. 'userType' must be 'client'.",
+            message: "Invalid client data. 'userType' must be 'client'.",
           })
         );
       }
@@ -37,7 +34,7 @@ exports.createClient = function (body) {
         "lastName",
         "password",
         "phone",
-        "postalCode"
+        "postalCode",
       ];
 
       // Validate required fields
@@ -85,11 +82,7 @@ exports.createClient = function (body) {
       // Return the created client
       resolve(newClient);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };

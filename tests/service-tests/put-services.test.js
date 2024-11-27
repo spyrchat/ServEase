@@ -287,8 +287,7 @@ test("Description surpassing 300 characters", async (t) => {
     serviceId: 1,
     userType: "service",
     serviceType: "Plumbing",
-    description:
-    "A".repeat(301),
+    description: "A".repeat(301),
     city: "Los Angeles",
     address: "456 Elm Street",
     country: "USA",

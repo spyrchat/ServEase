@@ -241,7 +241,7 @@ exports.editService = function (body, serviceId) {
           })
         );
       }
-      if (serviceId !==body.serviceId) {
+      if (serviceId !== body.serviceId) {
         return reject(
           respondWithCode(400, {
             message: "'serviceId' in path must match serviceId in body.",
@@ -264,11 +264,9 @@ exports.editService = function (body, serviceId) {
         "serviceImg",
         "availableTimeSlots",
       ];
-      
+
       // Validate required fields
-      const missingFields = requiredFields.filter(
-        (field) => !body[field]
-      );
+      const missingFields = requiredFields.filter((field) => !body[field]);
 
       if (missingFields.length > 0) {
         return reject(
@@ -277,11 +275,11 @@ exports.editService = function (body, serviceId) {
           })
         );
       }
-      
+
       const service = services.find(
         (service) => service.serviceId === serviceId
       );
-      
+
       // Service not found
       if (!service) {
         return reject(
@@ -290,7 +288,7 @@ exports.editService = function (body, serviceId) {
           })
         );
       }
-      
+
       // List of fields that can be updated
       const updatableFields = [
         "serviceType",
@@ -335,11 +333,7 @@ exports.editService = function (body, serviceId) {
       // Return the updated service
       resolve(service);
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
@@ -378,11 +372,7 @@ exports.deleteService = function (serviceId) {
         );
       }
     } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
+      reject(respondWithCode(500, {message: "Internal Server Error",}));
     }
   });
 };
