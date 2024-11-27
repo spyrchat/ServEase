@@ -126,7 +126,7 @@ test("Unit Test GET /appointments - Successful Fetch appointments by clientId an
  */
 test("Unit Test GET /appointments - Unsuccessful Fetch appointments by clientId: clientId is not integer", async (t) => {
   try {
-    // Suppose serviceId is not integer
+    // Suppose clientId is not integer
     const clientId = "hi";
 
     // Fetch appointments
@@ -171,6 +171,62 @@ test("Unit Test GET /appointments - Unsuccessful Fetch appointments by serviceId
     t.is(
       error.response.body.message,
       "request.query.serviceId should be integer"
+    );
+  } catch (error) {
+    t.fail(`Test encountered an unexpected error: ${error.message}`);
+  }
+});
+
+/**
+ * Tests unsuccessful fetch of appointments by clientId: clientId is not positive. [UNHAPPY PATH]
+ */
+test("Unit Test GET /appointments - Unsuccessful Fetch appointments by clientId: clientId is not positive", async (t) => {
+  try {
+    // Suppose clientId is not positive
+    const clientId = -4;
+
+    // Fetch appointments
+    const error = await t.throwsAsync(
+      () =>
+        t.context.got.get("appointments", {
+          searchParams: { clientId: clientId },
+        }),
+      { instanceOf: t.context.got.HTTPError }
+    );
+
+    // Assert that the API returned the expected error response
+    t.is(error.response.statusCode, 400, "Should return 400");
+    t.is(
+      error.response.body.message,
+      "clientId must be positive integer"
+    );
+  } catch (error) {
+    t.fail(`Test encountered an unexpected error: ${error.message}`);
+  }
+});
+
+/**
+ * Tests unsuccessful fetch of appointments by serviceId: serviceId is not positive. [UNHAPPY PATH]
+ */
+test("Unit Test GET /appointments - Unsuccessful Fetch appointments by serviceId: serviceId is not positive", async (t) => {
+  try {
+    // Suppose serviceId is not positive
+    const serviceId = -4;
+
+    // Fetch appointments
+    const error = await t.throwsAsync(
+      () =>
+        t.context.got.get("appointments", {
+          searchParams: { serviceId: serviceId },
+        }),
+      { instanceOf: t.context.got.HTTPError }
+    );
+
+    // Assert that the API returned the expected error response
+    t.is(error.response.statusCode, 400, "Should return 400");
+    t.is(
+      error.response.body.message,
+      "serviceId must be positive integer"
     );
   } catch (error) {
     t.fail(`Test encountered an unexpected error: ${error.message}`);

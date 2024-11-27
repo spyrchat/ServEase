@@ -83,6 +83,28 @@ test("Unit Test GET /appointment/{appointmentId} - Unsuccessful Fetch appointmen
 });
 
 /**
+ * Tests unsuccessful fetch of an appointment by appointmentId: appointmentId is not positive. [UNHAPPY PATH]
+ */
+test("Unit Test GET /appointment/{appointmentId} - Unsuccessful Fetch appointment by appointmentId: appointmentId is not positive", async (t) => {
+  try {
+    // Suppose appointmentId is not positive
+    const appointmentId = -4;
+
+    // Make the GET request
+    const error = await t.throwsAsync(
+      () => t.context.got.get(`appointments/${appointmentId}`),
+      { instanceOf: t.context.got.HTTPError }
+    );
+
+    // Assert that the API returned the expected error response
+    t.is(error.response.statusCode, 400, "Should return 400");
+    t.is(error.response.body.message, "appointmentId must be positive integer");
+  } catch (error) {
+    t.fail(`Test encountered an unexpected error: ${error.message}`);
+  }
+});
+
+/**
  * Tests unsuccessful fetch of an appointment by appointmentId: appointmentId is not integer. [UNHAPPY PATH]
  */
 test("Unit Test GET /appointment/{appointmentId} - Unsuccessful Fetch appointment by appointmentId: appointmentId is not integer", async (t) => {
@@ -106,4 +128,3 @@ test("Unit Test GET /appointment/{appointmentId} - Unsuccessful Fetch appointmen
     t.fail(`Test encountered an unexpected error: ${error.message}`);
   }
 });
-
