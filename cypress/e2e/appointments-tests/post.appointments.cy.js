@@ -1,8 +1,7 @@
-
 // ------------------------------------------ TESTS: POST /appointments ------------------------------------------ //
 
 describe("Servease app: POST /appointments", () => {
-
+  
   /**
    * Opens SwaggerHub UI
    */
@@ -14,14 +13,23 @@ describe("Servease app: POST /appointments", () => {
    * Checks if POST /appointments element exists
    */
   it("POST /appointments: Exists", () => {
-    // Verify the POST method and endpoint are present
-    cy.get("#operations-appointments-createAppointment .opblock-summary-method")
-      .contains("POST")
-      .should("exist");
-
-    cy.get("#operations-appointments-createAppointment .opblock-summary-path")
+    cy.get("#operations-appointments-createAppointment")
       .should("exist")
-      .should("have.attr", "data-path", "/appointments");
+      .within(() => {
+        // Verify method and data-path
+        cy.contains(".opblock-summary-method", "POST")
+          .should("exist");
+
+        cy.contains(".opblock-summary-path", "/appointments")
+          .should("exist")
+          .should("have.attr", "data-path", "/appointments");
+
+        // Verify endpoint description, method, and path are displayed correctly
+        cy.contains(
+          ".opblock-summary-description",
+          "Create an appointment"
+        ).should("exist");
+      });
   });
 
   /**
@@ -29,59 +37,55 @@ describe("Servease app: POST /appointments", () => {
    */
   it("POST /appointments: Is clickable", () => {
     // Ensure the POST /appointments section can be expanded
-    cy.get(
-      "#operations-appointments-createAppointment .opblock-summary"
-    ).click();
-    cy.get("#operations-appointments-createAppointment").should(
-      "have.class",
-      "is-open"
-    );
+    cy.get("#operations-appointments-createAppointment")
+      .click()
+      .should("have.class", "is-open")
+      .within(() => {
+        // Verifies that expected text appears in the expanded section
+        cy.contains(
+          "FR-3 The client must be able to apply for an appointment at a service"
+        ).should("exist");
+      });
   });
 
   /**
-   * Checks if "Try it out" button is clickable 
+   * Checks if "Try it out" button is clickable
    */
   it("POST /appointments: 'Try it out' button is clickable", () => {
-    cy.get(
-      "#operations-appointments-createAppointment .opblock-summary"
-    ).click();
-    cy.get("#operations-appointments-createAppointment .try-out__btn").click();
-    cy.get("#operations-appointments-createAppointment .try-out__btn").should(
-      "contain.text",
-      "Cancel"
-    ); // Assuming the button changes text after clicking
+    cy.get("#operations-appointments-createAppointment").click();
+
+    cy.get("#operations-appointments-createAppointment .try-out__btn")
+      .should("contain.text", "Try it out")
+      .click()
+      .should("contain.text", "Cancel");
   });
 
   /**
    * Makes a POST /appointments request
    */
   it("POST /appointments: Sends a valid request", () => {
-    cy.get(
-      "#operations-appointments-createAppointment .opblock-summary"
-    ).click();
-    cy.get("#operations-appointments-createAppointment .try-out__btn").click();
+    cy.fixture("newAppointment").then((newAppointment) => {
+      cy.get("#operations-appointments-createAppointment").click();
 
-    const clientId = 1;
-    const serviceId = 1;
+      cy.get(
+        "#operations-appointments-createAppointment .try-out__btn"
+      ).click();
 
-    cy.get("#operations-appointments-createAppointment textarea")
-      .clear()
-      .type(`
-        clientId: ${clientId},
-        serviceId: ${serviceId},
-        serviceDetails: "Need to fix my car",
-        status: "Confirmation Pending",
-        timeSlot:
-          {
-            availability: true,
-            date: "2024-12-20",
-            startingTime: "15:00:00",
-          },`,
-        { parseSpecialCharSequences: false }
-      );
-    cy.get("#operations-appointments-createAppointment .btn.execute").click();
-    cy.get("#operations-appointments-createAppointment .responses-wrapper")
-      .contains("200")
-      .should("exist");
+      cy.get("#operations-appointments-createAppointment textarea")
+        .clear()
+        .type(JSON.stringify(newAppointment, null, 2), {
+          parseSpecialCharSequences: false,
+        });
+
+      cy.get("#operations-appointments-createAppointment .btn.execute").click();
+
+      // Verify the response status
+      cy.get(
+        "#operations-appointments-createAppointment .responses-table.live-responses-table"
+      )
+        .find(".col.response-col_status")
+        .should("exist")
+        .and("include.text", "200");
+    });
   });
 });

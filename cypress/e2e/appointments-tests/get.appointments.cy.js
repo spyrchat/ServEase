@@ -1,10 +1,10 @@
 // ------------------------------------------ TESTS: GET /appointments ------------------------------------------ //
 
 describe("Servease app: GET /appointments", () => {
+  
   /**
    * Opens SwaggerHub UI
    */
-
   beforeEach(() => {
     cy.visit("http://localhost:8080/docs/");
   });
@@ -13,48 +13,56 @@ describe("Servease app: GET /appointments", () => {
    * Checks if GET /appointments element exists
    */
   it("GET /appointments: Exists", () => {
-    // Verify the GET method and endpoint are present
-    cy.get(
-      "#operations-appointments-getClientAppointments .opblock-summary-method"
-    )
-      .contains("GET")
-      .should("exist");
-
-    cy.get(
-      "#operations-appointments-getClientAppointments .opblock-summary-path"
-    )
+    cy.get("#operations-appointments-getClientAppointments")
       .should("exist")
-      .should("have.attr", "data-path", "/appointments");
+      .within(() => {
+        // Verify method and data-path
+        cy.contains(".opblock-summary-method", "GET")
+          .should("exist");
+
+        cy.contains(".opblock-summary-path", "/appointments")
+          .should("exist")
+          .should("have.attr", "data-path", "/appointments");
+
+        // Verify endpoint description, method, and path are displayed correctly
+        cy.contains(
+          ".opblock-summary-description",
+          "Get the appointments of a client or a service"
+        ).should("exist");
+      });
   });
+
 
   /**
    * Checks if GET /appointments element is clickable
    */
   it("GET /appointments: Is clickable", () => {
-    // Ensure the GET /appointments section can be expanded
-    cy.get(
-      "#operations-appointments-getClientAppointments .opblock-summary"
-    ).click();
-    cy.get("#operations-appointments-getClientAppointments").should(
-      "have.class",
-      "is-open"
-    );
+    // Ensure the POST /appointments section can be expanded
+    cy.get("#operations-appointments-getClientAppointments")
+      .click()
+      .should("have.class", "is-open")
+      .within(() => {
+        // Verifies that expected text appears in the expanded section
+        cy.contains(
+          "FR-8 The client must be able to view his appointments, FR-10 The professional must be able to manage his appointment applications"
+        ).should("exist");
+      });
   });
 
   /**
    * Checks if "Try it out" button is clickable
    */
   it("GET /appointments: 'Try it out' button is clickable", () => {
-    cy.get("#operations-appointments-getAppointment .opblock-summary").click();
-    cy.get("#operations-appointments-getAppointment .try-out__btn").click();
-    cy.get("#operations-appointments-getAppointment .try-out__btn").should(
-      "contain.text",
-      "Cancel"
-    ); // Assuming the button changes text after clicking
+    cy.get("#operations-appointments-getClientAppointments").click();
+
+    cy.get("#operations-appointments-getClientAppointments .try-out__btn")
+      .should("contain.text", "Try it out")
+      .click()
+      .should("contain.text", "Cancel");
   });
 
   /**
-   * Makes a GET /appointments/{appointmentId} request
+   * Makes a GET /appointments request without parameters
    */
   it("GET /appointments: Send a valid request", () => {
     cy.get(
@@ -66,13 +74,14 @@ describe("Servease app: GET /appointments", () => {
     cy.get(
       "#operations-appointments-getClientAppointments .btn.execute"
     ).click();
-    cy.get("#operations-appointments-getClientAppointments .responses-wrapper")
-      .contains("200")
-      .should("exist");
+    cy.get("#operations-appointments-getClientAppointments .responses-table.live-responses-table")
+      .find(".col.response-col_status")
+      .should("exist")
+      .and("include.text", "200");
   });
 
   /**
-   *
+   * Makes a GET /appointments request with parameters
    */
   it("GET /appointments: Try it out with clientId and serviceId", () => {
     const clientId = 2;
@@ -86,7 +95,6 @@ describe("Servease app: GET /appointments", () => {
     ).click();
 
     // Enter clientId and serviceId in the appropriate input fields
-    // Find the <tr> with data-param-name="clientId" and type into its input field
     cy.get(
       '#operations-appointments-getClientAppointments tr[data-param-name="clientId"]'
     )
@@ -110,8 +118,9 @@ describe("Servease app: GET /appointments", () => {
     ).click();
 
     // Verify the response contains a 200 status code
-    cy.get("#operations-appointments-getClientAppointments .responses-wrapper")
-      .contains("200")
-      .should("exist");
+    cy.get("#operations-appointments-getClientAppointments .responses-table.live-responses-table")
+      .find(".col.response-col_status")
+      .should("exist")
+      .and("include.text", "200");
   });
 });
