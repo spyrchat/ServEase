@@ -36,7 +36,7 @@ test("Successful modification of service", async (t) => {
     serviceId: 1,
     userType: "service",
     serviceType: "Plumbing",
-    description: "Perfect plumbing services.",
+    description: "Amazing plumbing services.",
     city: "Los Angeles",
     address: "456 Elm Street",
     country: "USA",
