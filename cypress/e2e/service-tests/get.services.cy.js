@@ -31,10 +31,10 @@ describe("Servease app: GET /services", () => {
   });
 
   /**
-   * Checks if GET /appointments element is clickable
+   * Checks if GET /services element is clickable
    */
   it("GET /services: Is clickable", () => {
-    // Ensure the POST /appointments section can be expanded
+    // Ensure the GET /services section can be expanded
     cy.get("#operations-services-searchServices")
       .click()
       .should("have.class", "is-open")
