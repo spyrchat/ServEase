@@ -65,10 +65,10 @@ describe("Servease app: POST /clients", () => {
       // Execute the POST request
       cy.get(".btn.execute.opblock-control__btn").click();
 
-      // Verify the response status
-      cy.get("#operations-clients-createClient .col.response-col_status")
-        .should("exist")
-        .contains("200");
+      cy.get("#operations-clients-createClient .responses-table.live-responses-table")
+      .find(".col.response-col_status")
+      .should("exist")
+      .and("include.text", "200");
     });
   });
 });
