@@ -1,7 +1,7 @@
 
-// -------------------------------- TESTS: POST /service/{serviceId}/ratings ------------------------------ //
+// -------------------------------- TESTS: PUT /appointments/{appointmentId} ------------------------------ //
 
-describe("Servease app: POST /service/{serviceId}/ratings", () =>{
+describe("Servease app: PUT /appointments/{appointmentId}", () =>{
 
     /**
      * Opens SwaggerHub UI before each test
@@ -12,55 +12,55 @@ describe("Servease app: POST /service/{serviceId}/ratings", () =>{
 
 
     /**
-     * Checks if POST /service/{serviceId}/ratings element exists
+     * Checks if PUT /appointments/{appointmentId} element exists
      */
-    it("POST /service/{serviceId}/ratings: Exists", () => {
+    it("PUT /appointments/{appointmentId}: Exists", () => {
 
         // Check that the main div of the route exists
-        cy.get("#operations-ratings-createRating")
+        cy.get("#operations-appointments-editServiceAppointment")
         .should("exist")
         .within(() => {
 
             // Check if 'POST' method is shown in the summary
             cy.get(".opblock-summary-method")
-            .contains("POST")
-            .should("exist");
+            .should("exist")
+            .should("contain.text", "PUT");
 
             // Check if the path element exists and has the correct 'data-path' attribute
             cy.get(".opblock-summary-path")
             .should("exist")
-            .should("have.attr", "data-path", "/service/{serviceId}/ratings");
+            .should("have.attr", "data-path", "/appointments/{appointmentId}");
 
             // Verify description
             cy.get(".opblock-summary-description")
-            cy.contains("Create a rating")
+            cy.contains("Edit an appointment")
             .should("exist");
         });
     });
 
     
     /**
-     * Checks if POST /service/{serviceId}/ratings element is clickable
+     * Checks if PUT /appointments/{appointmentId} element is clickable
      */
-    it("POST /service/{serviceId}/ratings: Is clickable", () => {
+    it("PUT /appointments/{appointmentId}: Is clickable", () => {
         
-        cy.get("#operations-ratings-createRating")
+        cy.get("#operations-appointments-editServiceAppointment")
         .click()
         .should("have.class", "is-open")
         .within(() => {
             // Verifies that expected text appears in the expanded section
-            cy.contains("FR-6 The client must be able to rate a service")
+            cy.contains("FR-10 The professional must be able to manage his appointment applications, FR-7 The client must be able to cancel his appointment")
             .should("exist");
         });
     });
 
 
     /**
-     * Checks if a valid request POST /service/{serviceId}/ratings can be made
+     * Checks if a valid request PUT /appointments/{appointmentId} can be made
      */
-    it("POST /service/{serviceId}/ratings: Sends a valid request", () => {
+    it("PUT /appointments/{appointmentId}: Sends a valid request", () => {
 
-        cy.get("#operations-ratings-createRating").within(()=>{
+        cy.get("#operations-appointments-editServiceAppointment").within(()=>{
         
             // Expand the operation
             cy.get(".opblock-summary")
@@ -70,25 +70,27 @@ describe("Servease app: POST /service/{serviceId}/ratings", () =>{
             cy.get(".try-out__btn")
             .should('exist')
             .should('have.text', 'Try it out ')
+
+            cy.get(".try-out__btn")
             .click()
             .should('have.text', 'Cancel');
 
 
             // Load data from the fixture
-            cy.fixture("rating.json").then((rating) => {
+            cy.fixture("Appointment.json").then((appointment) => {
 
-                const {serviceId} = rating;
+                const {appointmentId} = appointment;
 
                 // Update the path parameter (serviceId)
                 cy.get("td.col.parameters-col_description")
                 .find("input")
-                .type(`${serviceId}`)
-                .should("have.value", `${serviceId}`);
+                .type(`${appointmentId}`)
+                .should("have.value", `${appointmentId}`);
 
                 // Fill the textarea with a valid JSON body
                 cy.get("textarea.body-param__text")
                 .clear()
-                .type(JSON.stringify(rating, null, 2));
+                .type(JSON.stringify(appointment, null, 2));
 
                 // Click the 'Execute' button
                 cy.get("button.btn.execute.opblock-control__btn")

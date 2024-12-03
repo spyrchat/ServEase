@@ -1,7 +1,7 @@
 
-// -------------------------------- TESTS: POST /service/{serviceId}/ratings ------------------------------ //
+// -------------------------------- TESTS: GET /service/{serviceId}/ratings ------------------------------ //
 
-describe("Servease app: POST /service/{serviceId}/ratings", () =>{
+describe("Servease app: GET /service/{serviceId}/ratings", () =>{
 
     /**
      * Opens SwaggerHub UI before each test
@@ -12,18 +12,18 @@ describe("Servease app: POST /service/{serviceId}/ratings", () =>{
 
 
     /**
-     * Checks if POST /service/{serviceId}/ratings element exists
+     * Checks if GET /service/{serviceId}/ratings element exists
      */
-    it("POST /service/{serviceId}/ratings: Exists", () => {
+    it("GET /service/{serviceId}/ratings: Exists", () => {
 
         // Check that the main div of the route exists
-        cy.get("#operations-ratings-createRating")
+        cy.get("#operations-ratings-getServiceRatings")
         .should("exist")
         .within(() => {
 
-            // Check if 'POST' method is shown in the summary
+            // Check if 'GET' method is shown in the summary
             cy.get(".opblock-summary-method")
-            .contains("POST")
+            .contains("GET")
             .should("exist");
 
             // Check if the path element exists and has the correct 'data-path' attribute
@@ -33,34 +33,33 @@ describe("Servease app: POST /service/{serviceId}/ratings", () =>{
 
             // Verify description
             cy.get(".opblock-summary-description")
-            cy.contains("Create a rating")
+            cy.contains("Get the ratings of a service")
             .should("exist");
         });
     });
 
     
     /**
-     * Checks if POST /service/{serviceId}/ratings element is clickable
+     * Checks if GET /service/{serviceId}/ratings element is clickable
      */
-    it("POST /service/{serviceId}/ratings: Is clickable", () => {
-        
-        cy.get("#operations-ratings-createRating")
+    it("GET /service/{serviceId}/ratings: Is clickable", () => {
+        cy.get("#operations-ratings-getServiceRatings")
         .click()
         .should("have.class", "is-open")
         .within(() => {
             // Verifies that expected text appears in the expanded section
-            cy.contains("FR-6 The client must be able to rate a service")
+            cy.contains("FR-5 The client must be able to access a service's information, FR-9 The professional must be able to edit his service's information")
             .should("exist");
         });
     });
 
 
     /**
-     * Checks if a valid request POST /service/{serviceId}/ratings can be made
+     * Checks if a valid request GET /service/{serviceId}/ratings can be made
      */
-    it("POST /service/{serviceId}/ratings: Sends a valid request", () => {
+    it("GET /service/{serviceId}/ratings: Sends a valid request", () => {
 
-        cy.get("#operations-ratings-createRating").within(()=>{
+        cy.get("#operations-ratings-getServiceRatings").within(()=>{
         
             // Expand the operation
             cy.get(".opblock-summary")
@@ -85,11 +84,6 @@ describe("Servease app: POST /service/{serviceId}/ratings", () =>{
                 .type(`${serviceId}`)
                 .should("have.value", `${serviceId}`);
 
-                // Fill the textarea with a valid JSON body
-                cy.get("textarea.body-param__text")
-                .clear()
-                .type(JSON.stringify(rating, null, 2));
-
                 // Click the 'Execute' button
                 cy.get("button.btn.execute.opblock-control__btn")
                 .click();
@@ -101,5 +95,7 @@ describe("Servease app: POST /service/{serviceId}/ratings", () =>{
                 .and("include.text", "200");
             });
         });
+
     });
+    
 });
