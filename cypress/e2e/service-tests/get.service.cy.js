@@ -23,8 +23,9 @@ describe("Servease app: GET /services/{serviceId}", () => {
           .should("have.attr", "data-path", "/services/{serviceId}");
 
         // Verify endpoint description, method, and path are displayed correctly
-        cy.contains(".opblock-summary-description", "Get a service")
-          .should("exist");
+        cy.contains(".opblock-summary-description", "Get a service").should(
+          "exist"
+        );
       });
   });
 
