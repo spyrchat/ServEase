@@ -30,7 +30,7 @@ test.after.always(async (t) => {
 /**
  * Tests successful modification of a service [HAPPY PATH].
  */
-test("Successful modification of service", async (t) => {
+test("Successful modification of service description", async (t) => {
   const serviceId = 1;
   let body = {
     serviceId: 1,
