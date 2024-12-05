@@ -1,0 +1,16 @@
+{
+    "userType": "service",
+    "serviceType": "doctor",
+    "description": "A professional medical service.",
+    "city": "Health City",
+    "address": "123 Medical Lane",
+    "country": "Countryland",
+    "postalCode": 12345,
+    "email": "doctor@example.com",
+    "phone": "1234567890",
+    "rating": 4.5,
+    "serviceImg": "image_binary_data",
+    "availableTimeSlots": [
+        { "availability": true, "date": "2024-01-01", "startingTime": "09:00:00" }
+    ]
+}
