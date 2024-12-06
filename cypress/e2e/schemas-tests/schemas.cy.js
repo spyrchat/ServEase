@@ -39,6 +39,11 @@ describe("Servease app: Schemas Section UI Tests", () => {
       { id: "model-NewClient", title: "NewClient" },
       { id: "model-Client", title: "Client" },
       { id: "model-PersonalInformation", title: "PersonalInformation" },
+      { id: "model-NewAppointment", title: "NewAppointment" }, 
+      { id: "model-Appointment", title: "Appointment" }, 
+      { id: "model-TimeSlot", title: "TimeSlot" }, 
+      { id: "model-Rating", title: "Rating" }, 
+      { id: "model-Error", title: "Error" }
     ];
 
     modelContainers.forEach((container) => {
