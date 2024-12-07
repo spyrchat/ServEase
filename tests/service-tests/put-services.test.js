@@ -30,13 +30,13 @@ test.after.always(async (t) => {
 /**
  * Tests successful modification of a service [HAPPY PATH].
  */
-test("Successful modification of service description", async (t) => {
+test("Successful modification of service", async (t) => {
   const serviceId = 1;
   let body = {
     serviceId: 1,
     userType: "service",
     serviceType: "Plumbing",
-    description: "Amazing plumbing services.",
+    description: "Perfect plumbing services.",
     city: "Los Angeles",
     address: "456 Elm Street",
     country: "USA",
