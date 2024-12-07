@@ -1,0 +1,21 @@
+{
+    "serviceId": 1,
+    "userType": "service",
+    "serviceType": "Plumbing",
+    "description": "Amazing plumbing services.",
+    "city": "Los Angeles",
+    "address": "456 Elm Street",
+    "country": "USA",
+    "postalCode": 90001,
+    "email": "plumbing.services@example.com",
+    "phone": "9876543210",
+    "rating": 4.5,
+    "serviceImg": "binaryImageData",
+    "availableTimeSlots": [
+      {
+        "availability": true,
+        "date": "2023-12-01",
+        "startingTime": "09:00:00"
+      }
+    ]
+  }
