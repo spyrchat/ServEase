@@ -1,0 +1,12 @@
+{
+    "appointmentId": 1,
+    "clientId": 1,
+    "serviceId": 1,
+    "serviceDetails": "Need to fix my car",
+    "status": "Confirmation Pending",
+    "timeSlot": {
+      "availability": true,
+      "date": "2024-12-20",
+      "startingTime": "15:00:00"
+    }
+}
