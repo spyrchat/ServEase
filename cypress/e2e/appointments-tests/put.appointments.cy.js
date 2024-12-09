@@ -77,7 +77,7 @@ describe("Servease app: PUT /appointments/{appointmentId}", () =>{
 
 
             // Load data from the fixture
-            cy.fixture("Appointment.json").then((appointment) => {
+            cy.fixture("appointment.json").then((appointment) => {
 
                 const {appointmentId} = appointment;
 

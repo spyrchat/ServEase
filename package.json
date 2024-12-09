@@ -17,13 +17,16 @@
   "private": true,
   "dependencies": {
     "busboy": "^1.6.0",
+    "concat-stream": "^2.0.0",
     "connect": "^3.2.0",
     "has-proto": "^1.0.3",
     "has-symbols": "^1.0.3",
     "hasown": "^2.0.2",
     "js-yaml": "^3.3.0",
     "multer": "^1.4.5-lts.1",
-    "oas3-tools": "^2.2.3"
+    "oas3-tools": "^2.2.3",
+    "process-nextick-args": "^2.0.1",
+    "readable-stream": "^3.6.0"
   },
   "devDependencies": {
     "ava": "^5.3.1",
@@ -44,5 +47,4 @@
       "--experimental-vm-modules"
     ]
   }
-
 }
