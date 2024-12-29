@@ -22,7 +22,7 @@
     "has-proto": "^1.0.3",
     "has-symbols": "^1.0.3",
     "hasown": "^2.0.2",
-    "js-yaml": "^3.3.0",
+    "js-yaml": "4.1.0",
     "multer": "^1.4.5-lts.1",
     "oas3-tools": "^2.2.3",
     "process-nextick-args": "^2.0.1",
