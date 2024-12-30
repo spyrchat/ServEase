@@ -8,24 +8,12 @@ class ResponsePayload {
 exports.respondWithCode = (code, payload) => new ResponsePayload(code, payload);
 
 exports.writeJson = (response, arg1, arg2) => {
-  let code = 200; // Default to 200 if no code provided
-  let payload;
-
-  if (arg1 && arg1 instanceof ResponsePayload) {
+  if (arg1 instanceof ResponsePayload) {
     return exports.writeJson(response, arg1.payload, arg1.code);
   }
 
-  if (arg2 && Number.isInteger(arg2)) {
-    code = arg2;
-  } else if (arg1 && Number.isInteger(arg1)) {
-    code = arg1;
-  }
-
-  if (arg1) {
-    payload = typeof arg1 === 'object' ? JSON.stringify(arg1, null, 2) : arg1;
-  } else {
-    payload = null;
-  }
+  let code = arg2 && Number.isInteger(arg2) ? arg2 : (arg1 && Number.isInteger(arg1) ? arg1 : 200);
+  const payload = arg1 ? (typeof arg1 === 'object' ? JSON.stringify(arg1, null, 2) : arg1) : null;
 
   response.writeHead(code, { 'Content-Type': 'application/json' });
   response.end(payload);
