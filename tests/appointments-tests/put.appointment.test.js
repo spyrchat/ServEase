@@ -3,6 +3,7 @@ const test = require("ava");
 const got = require("got");
 const app = require("../../index.js");
 
+
 // Helper function to generate request bodies for appointment updates
 function createAppointmentUpdate(overrides = {}) {
   return {
@@ -54,7 +55,7 @@ test.after.always(async (t) => {
 });
 
 /**
- * Tests successful modification of an appointment  [HAPPY PATH].
+ * Utility function for sending PUT requests and handling assertions.
  */
 test("editServiceAppointment - Successful appointment modification", async (t) => {
   const appointmentId = 1;
@@ -79,7 +80,7 @@ test("editServiceAppointment - Successful appointment modification", async (t) =
 });
 
 /**
- * Tests unsuccessful modification of an appointment - appointment with appointmentId does NOT exist [UNHAPPY PATH].
+ * Tests unsuccessful modification of an appointment - appointment does NOT exist [UNHAPPY PATH].
  */
 test("editServiceAppointment - Appointment doesn't exist", async (t) => {
   const invalidAppointmentId = 999;
@@ -94,7 +95,7 @@ test("editServiceAppointment - Appointment doesn't exist", async (t) => {
 });
 
 /**
- * Tests unsuccessful modification of an appointment - Attempt to modify appointmentId [UNHAPPY PATH].
+ * Tests unsuccessful modification of appointmentId [UNHAPPY PATH].
  */
 test("editServiceAppointment - Attempt to modify appointmentId should fail", async (t) => {
   const appointmentId = 1;
@@ -109,7 +110,7 @@ test("editServiceAppointment - Attempt to modify appointmentId should fail", asy
 });
 
 /**
- * Tests unsuccessful modification of an appointment - Attempt to modify clientId [UNHAPPY PATH].
+ * Tests unsuccessful modification of clientId [UNHAPPY PATH].
  */
 test("editServiceAppointment - Attempt to modify clientId should fail", async (t) => {
   const appointmentId = 1;
@@ -124,7 +125,7 @@ test("editServiceAppointment - Attempt to modify clientId should fail", async (t
 });
 
 /**
- * Tests unsuccessful modification of an appointment - Attempt to modify serviceId [UNHAPPY PATH].
+ * Tests unsuccessful modification of serviceId [UNHAPPY PATH].
  */
 test("editServiceAppointment - Attempt to modify serviceId should fail", async (t) => {
   const appointmentId = 1;
