@@ -1,20 +1,33 @@
-class ResponsePayload {
-  constructor(code, payload) {
-    this.code = code;
-    this.payload = payload;
+var ResponsePayload = function (code, payload) {
+  this.code = code;
+  this.payload = payload;
+};
+
+exports.respondWithCode = function (code, payload) {
+  return new ResponsePayload(code, payload);
+};
+
+var writeJson = exports.writeJson = function (response, arg1, arg2) {
+  if (arg1 && arg1 instanceof ResponsePayload) {
+    writeJson(response, arg1.payload, arg1.code);
+    return;
   }
+
+  const { code, payload } = determineResponseComponents(arg1, arg2);
+  sendResponse(response, code, payload);
+};
+
+function determineResponseComponents(arg1, arg2) {
+  let code = arg2 && Number.isInteger(arg2) ? arg2 : arg1 && Number.isInteger(arg1) ? arg1 : 200;
+  let payload = arg1 && !(arg1 instanceof ResponsePayload) ? arg1 : null;
+
+  return { code, payload };
 }
 
-exports.respondWithCode = (code, payload) => new ResponsePayload(code, payload);
-
-exports.writeJson = (response, arg1, arg2) => {
-  if (arg1 instanceof ResponsePayload) {
-    return exports.writeJson(response, arg1.payload, arg1.code);
+function sendResponse(response, code, payload) {
+  if (typeof payload === 'object') {
+    payload = JSON.stringify(payload, null, 2);
   }
-
-  let code = arg2 && Number.isInteger(arg2) ? arg2 : (arg1 && Number.isInteger(arg1) ? arg1 : 200);
-  const payload = arg1 ? (typeof arg1 === 'object' ? JSON.stringify(arg1, null, 2) : arg1) : null;
-
   response.writeHead(code, { 'Content-Type': 'application/json' });
   response.end(payload);
-};
+}
