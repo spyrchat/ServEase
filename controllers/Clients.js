@@ -5,7 +5,7 @@ var utils = require('../utils/writer.js');
 var Clients = require('../service/ClientsService');
 
 // Function to handle creating a new client
-module.exports.createClient = function createClient (req, res, next, body) {
+module.exports.createClient = function createClient (_, res, __, body) {
   // Call the service method to create a client, passing the request body
   Clients.createClient(body)
     .then(function (response) {
@@ -19,7 +19,7 @@ module.exports.createClient = function createClient (req, res, next, body) {
 };
 
 // Function to handle deleting a client by their clientId
-module.exports.deleteClient = function deleteClient (req, res, next, clientId) {
+module.exports.deleteClient = function deleteClient (_, res, __, clientId) {
   // Call the service method to delete the client by clientId
   Clients.deleteClient(clientId)
     .then(function (response) {
@@ -33,7 +33,7 @@ module.exports.deleteClient = function deleteClient (req, res, next, clientId) {
 };
 
 // Function to handle editing an existing client based on their clientId
-module.exports.editClient = function editClient (req, res, next, body, clientId) {
+module.exports.editClient = function editClient (_, res, __, body, clientId) {
   // Call the service method to edit the client, passing the updated data and the clientId
   Clients.editClient(body, clientId)
     .then(function (response) {
@@ -47,7 +47,7 @@ module.exports.editClient = function editClient (req, res, next, body, clientId)
 };
 
 // Function to retrieve details of a specific client by their clientId
-module.exports.getClient = function getClient (req, res, next, clientId) {
+module.exports.getClient = function getClient (_, res, __, clientId) {
   // Call the service method to get the client details by clientId
   Clients.getClient(clientId)
     .then(function (response) {

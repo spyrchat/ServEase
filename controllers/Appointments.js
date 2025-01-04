@@ -5,7 +5,7 @@ var utils = require('../utils/writer.js');
 var Appointments = require('../service/AppointmentsService');
 
 // Function to handle creating a new appointment
-module.exports.createAppointment = function createAppointment (req, res, next, body) {
+module.exports.createAppointment = function createAppointment (__, res, _, body) {
   // Call the service method to create an appointment and pass the request body
   Appointments.createAppointment(body)
     .then(function (response) {
@@ -19,7 +19,7 @@ module.exports.createAppointment = function createAppointment (req, res, next, b
 };
 
 // Function to handle editing an existing service appointment
-module.exports.editServiceAppointment = function editServiceAppointment (req, res, next, body, appointmentId) {
+module.exports.editServiceAppointment = function editServiceAppointment (__, res, _, body, appointmentId) {
   // Call the service method to edit the appointment, passing the updated data and the appointment ID
   Appointments.editServiceAppointment(body, appointmentId)
     .then(function (response) {
@@ -33,7 +33,7 @@ module.exports.editServiceAppointment = function editServiceAppointment (req, re
 };
 
 // Function to retrieve details of a specific appointment by its ID
-module.exports.getAppointment = function getAppointment (req, res, next, appointmentId) {
+module.exports.getAppointment = function getAppointment (__, res, _, appointmentId) {
   // Call the service method to get the appointment details by ID
   Appointments.getAppointment(appointmentId)
     .then(function (response) {
@@ -47,7 +47,7 @@ module.exports.getAppointment = function getAppointment (req, res, next, appoint
 };
 
 // Function to retrieve all appointments for a specific client and service
-module.exports.getClientAppointments = function getClientAppointments (req, res, next, clientId, serviceId) {
+module.exports.getClientAppointments = function getClientAppointments (__, res, _, clientId, serviceId) {
   // Call the service method to get appointments for the client and service
   Appointments.getClientAppointments(clientId, serviceId)
     .then(function (response) {

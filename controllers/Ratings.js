@@ -6,7 +6,7 @@ var utils = require('../utils/writer.js');
 var Ratings = require('../service/RatingsService');
 
 // Function to create a new rating for a service
-module.exports.createRating = function createRating (req, res, next, body, serviceId) {
+module.exports.createRating = function createRating (_, res, __, body, serviceId) {
   // Call the createRating method in the Ratings service with the provided body and serviceId
   Ratings.createRating(body, serviceId)
     .then(function (response) {
@@ -20,7 +20,7 @@ module.exports.createRating = function createRating (req, res, next, body, servi
 };
 
 // Function to retrieve all ratings for a specific service
-module.exports.getServiceRatings = function getServiceRatings (req, res, next, serviceId) {
+module.exports.getServiceRatings = function getServiceRatings (_, res, __, serviceId) {
   // Call the getServiceRatings method in the Ratings service with the provided serviceId
   Ratings.getServiceRatings(serviceId)
     .then(function (response) {

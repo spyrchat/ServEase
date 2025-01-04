@@ -94,8 +94,8 @@ exports.createClient = function (body) {
  * clientId String ID of the client to delete
  * no response value expected for this operation
  **/
-exports.deleteClient = function (clientId) {
-  return new Promise(function (resolve, reject) {
+exports.deleteClient = function () {
+  return new Promise(function (resolve, _) {
     resolve();
   });
 };
@@ -108,8 +108,8 @@ exports.deleteClient = function (clientId) {
  * clientId Integer The client's id
  * returns Client
  **/
-exports.editClient = function (body, clientId) {
-  return new Promise(function (resolve, reject) {
+exports.editClient = function () {
+  return new Promise(function (resolve, _) {
     var examples = {};
     examples["application/json"] = "";
     if (Object.keys(examples).length > 0) {
@@ -127,8 +127,8 @@ exports.editClient = function (body, clientId) {
  * clientId Integer The client's id
  * returns Client
  **/
-exports.getClient = function (clientId) {
-  return new Promise(function (resolve, reject) {
+exports.getClient = function () {
+  return new Promise(function (resolve, _) {
     var examples = {};
     examples["application/json"] = "";
     if (Object.keys(examples).length > 0) {
