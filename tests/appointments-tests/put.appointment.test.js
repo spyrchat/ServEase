@@ -2,7 +2,7 @@ const http = require("http");
 const test = require("ava");
 const got = require("got");
 const app = require("../../index.js");
-
+const { respondWithCode } = require("../../utils/writer.js");
 
 // Helper function to generate request bodies for appointment updates
 function createAppointmentUpdate(overrides = {}) {
@@ -22,13 +22,13 @@ function createAppointmentUpdate(overrides = {}) {
 }
 
 // Helper function to handle PUT request errors
-async function assertPutError(t, appointmentId, requestBody, expectedStatusCode, expectedMessage) {
+async function assertPutError(t, appointmentId, requestBody, expectedResponse) {
   try {
     await t.context.got.put(`appointments/${appointmentId}`, { json: requestBody });
     t.fail("Expected editServiceAppointment to throw an error");
   } catch (error) {
-    t.is(error.response.statusCode, expectedStatusCode);
-    t.is(error.response.body.message, expectedMessage);
+    t.is(error.response.statusCode, expectedResponse.code);
+    t.is(error.response.body.message, expectedResponse.payload);
   }
 }
 
@@ -55,7 +55,7 @@ test.after.always(async (t) => {
 });
 
 /**
- * Utility function for sending PUT requests and handling assertions.
+ * Tests successful modification of an appointment  [HAPPY PATH].
  */
 test("editServiceAppointment - Successful appointment modification", async (t) => {
   const appointmentId = 1;
@@ -80,63 +80,70 @@ test("editServiceAppointment - Successful appointment modification", async (t) =
 });
 
 /**
- * Tests unsuccessful modification of an appointment - appointment does NOT exist [UNHAPPY PATH].
+ * Tests unsuccessful modification of an appointment - appointment with appointmentId does NOT exist [UNHAPPY PATH].
  */
 test("editServiceAppointment - Appointment doesn't exist", async (t) => {
   const invalidAppointmentId = 999;
   const requestBody = createAppointmentUpdate({ appointmentId: invalidAppointmentId });
+  expectedResponse = respondWithCode(404, `No appointment found with appointmentId: ${invalidAppointmentId}`)
+
   await assertPutError(
     t,
     invalidAppointmentId,
     requestBody,
-    404,
-    `No appointment found with appointmentId: ${invalidAppointmentId}`
+    expectedResponse
   );
 });
 
 /**
- * Tests unsuccessful modification of appointmentId [UNHAPPY PATH].
+ * Tests unsuccessful modification of an appointment - Attempt to modify appointmentId [UNHAPPY PATH].
  */
 test("editServiceAppointment - Attempt to modify appointmentId should fail", async (t) => {
   const appointmentId = 1;
   const requestBody = createAppointmentUpdate({ appointmentId: 2 });
+  expectedResponse = respondWithCode(400, "The following fields cannot be updated: appointmentId.")
+
   await assertPutError(
     t,
     appointmentId,
     requestBody,
-    400,
-    "The following fields cannot be updated: appointmentId."
+    expectedResponse
   );
+
 });
 
 /**
- * Tests unsuccessful modification of clientId [UNHAPPY PATH].
+ * Tests unsuccessful modification of an appointment - Attempt to modify clientId [UNHAPPY PATH].
  */
 test("editServiceAppointment - Attempt to modify clientId should fail", async (t) => {
   const appointmentId = 1;
   const requestBody = createAppointmentUpdate({ clientId: 10 });
+  expectedResponse = respondWithCode(400, "The following fields cannot be updated: clientId.")
+
   await assertPutError(
     t,
     appointmentId,
     requestBody,
-    400,
-    "The following fields cannot be updated: clientId."
+    expectedResponse
   );
+
 });
 
 /**
- * Tests unsuccessful modification of serviceId [UNHAPPY PATH].
+ * Tests unsuccessful modification of an appointment - Attempt to modify serviceId [UNHAPPY PATH].
  */
 test("editServiceAppointment - Attempt to modify serviceId should fail", async (t) => {
   const appointmentId = 1;
   const requestBody = createAppointmentUpdate({ serviceId: 3 });
+  expectedResponse = respondWithCode(400, "The following fields cannot be updated: serviceId.")
+
   await assertPutError(
     t,
     appointmentId,
     requestBody,
-    400,
-    "The following fields cannot be updated: serviceId."
+    expectedResponse
   );
+
 });
 
 /**
@@ -149,11 +156,13 @@ test("editServiceAppointment - Attempt to modify appointmentId, clientId, and se
     clientId: 10,
     serviceId: 15,
   });
+  expectedResponse = respondWithCode(400, "The following fields cannot be updated: appointmentId, clientId, serviceId.")
+
   await assertPutError(
     t,
     appointmentId,
     requestBody,
-    400,
-    "The following fields cannot be updated: appointmentId, clientId, serviceId."
+    expectedResponse
   );
+  
 });
