@@ -2,6 +2,7 @@ const http = require("http");
 const test = require("ava");
 const got = require("got");
 const app = require("../../index.js");
+const { respondWithCode } = require("../../utils/writer.js");
 
 // Helper function to generate service body
 function createServiceBody(overrides = {}) {
@@ -30,13 +31,13 @@ function createServiceBody(overrides = {}) {
 }
 
 // Helper function to handle expected errors
-async function assertPutError(t, serviceId, body, expectedStatusCode, expectedMessage) {
+async function assertPutError(t, serviceId, body, expectedResponse) {
   try {
     await t.context.got.put(`services/${serviceId}`, { json: body });
     t.fail("Expected the PUT request to throw an error");
   } catch (error) {
-    t.is(error.response.statusCode, expectedStatusCode);
-    t.is(error.response.body.message, expectedMessage);
+    t.is(error.response.statusCode, expectedResponse.code);
+    t.is(error.response.body.message, expectedResponse.payload);
   }
 }
 
@@ -90,14 +91,15 @@ test("Successful modification of service description", async (t) => {
 test("Unsuccessful modification of service: Non-matching serviceId in path and body", async (t) => {
   const serviceId = 2;
   const body = createServiceBody({ serviceId: 1 });
-
+  expectedResponse = respondWithCode(400, "'serviceId' in path must match serviceId in body.")
+  
   await assertPutError(
     t,
     serviceId,
     body,
-    400,
-    "'serviceId' in path must match serviceId in body."
+    expectedResponse
   );
+
 });
 
 /**
@@ -106,14 +108,15 @@ test("Unsuccessful modification of service: Non-matching serviceId in path and b
 test("Unsuccessful modification of service: Negative serviceId in path", async (t) => {
   const serviceId = -2;
   const body = createServiceBody({ serviceId });
-
+  expectedResponse = respondWithCode(400, "'serviceId' must be a positive integer.")
+  
   await assertPutError(
     t,
     serviceId,
     body,
-    400,
-    "'serviceId' must be a positive integer."
+    expectedResponse
   );
+ 
 });
 
 /**
@@ -123,14 +126,15 @@ test("Unsuccessful modification of service: Missing required fields", async (t) 
   const serviceId = 1;
   const body = createServiceBody();
   delete body.serviceImg;
-
+  expectedResponse = respondWithCode(400, "request.body should have required property 'serviceImg'")
+  
   await assertPutError(
     t,
     serviceId,
     body,
-    400,
-    "request.body should have required property 'serviceImg'"
+    expectedResponse
   );
+
 });
 
 /**
@@ -139,14 +143,15 @@ test("Unsuccessful modification of service: Missing required fields", async (t) 
 test("Unsuccessful modification of service: Empty required fields", async (t) => {
   const serviceId = 1;
   const body = createServiceBody({ phone: "" });
+  expectedResponse = respondWithCode(422, "Missing required fields: phone")
+  
+    await assertPutError(
+      t,
+      serviceId,
+      body,
+      expectedResponse
+    );
 
-  await assertPutError(
-    t,
-    serviceId,
-    body,
-    422,
-    "Missing required fields: phone"
-  );
 });
 
 /**
@@ -155,14 +160,14 @@ test("Unsuccessful modification of service: Empty required fields", async (t) =>
 test("Unsuccessful modification of service: No matching service in database", async (t) => {
   const serviceId = 5;
   const body = createServiceBody({ serviceId: 5 });
-
-  await assertPutError(
-    t,
-    serviceId,
-    body,
-    404,
-    `No service found with serviceId: ${serviceId}`
-  );
+  expectedResponse = respondWithCode(404, `No service found with serviceId: ${serviceId}`)
+  
+    await assertPutError(
+      t,
+      serviceId,
+      body,
+      expectedResponse
+    );
 });
 
 /**
@@ -171,14 +176,14 @@ test("Unsuccessful modification of service: No matching service in database", as
 test("Unsuccessful modification of service: Description exceeds 300 characters", async (t) => {
   const serviceId = 1;
   const body = createServiceBody({ description: "A".repeat(301) });
-
-  await assertPutError(
-    t,
-    serviceId,
-    body,
-    400,
-    "Description cannot exceed 300 characters."
-  );
+  expectedResponse = respondWithCode(400, "Description cannot exceed 300 characters.")
+  
+    await assertPutError(
+      t,
+      serviceId,
+      body,
+      expectedResponse
+    );
 });
 
 /**
@@ -187,12 +192,13 @@ test("Unsuccessful modification of service: Description exceeds 300 characters",
 test("Unsuccessful modification of service: Phone number exceeds 10 characters", async (t) => {
   const serviceId = 1;
   const body = createServiceBody({ phone: "98765432100" });
+  expectedResponse = respondWithCode(400, "Phone number cannot exceed 10 characters.")
+  
+    await assertPutError(
+      t,
+      serviceId,
+      body,
+      expectedResponse
+    );
 
-  await assertPutError(
-    t,
-    serviceId,
-    body,
-    400,
-    "Phone number cannot exceed 10 characters."
-  );
 });
