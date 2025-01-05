@@ -2,7 +2,7 @@ const http = require("http");
 const test = require("ava");
 const got = require("got");
 const app = require("../../index.js");
-
+const { respondWithCode } = require("../../utils/writer.js");
 /**
  * Opens server, before tests.
  */
@@ -26,13 +26,13 @@ test.after.always(async (t) => {
 /**
  * Utility function for sending POST requests and handling assertions.
  */
-async function sendPostRequest(t, endpoint, requestBody, expectedStatusCode, expectedMessage) {
+async function sendPostRequest(t, endpoint, requestBody, expectedResponse) {
   try {
     await t.context.got.post(endpoint, { json: requestBody });
     t.fail("Request should not succeed.");
   } catch (error) {
-    t.is(error.response.statusCode, expectedStatusCode);
-    t.is(error.response.body.message, expectedMessage);
+    t.is(error.response.statusCode, expectedResponse.code);
+    t.is(error.response.body.message, expectedResponse.payload);
   }
 }
 
@@ -93,8 +93,9 @@ test("createRating - Invalid 'stars' value", async (t) => {
     stars: 7,
     review: "Excellent service!",
   };
+  expectedResponse = respondWithCode(400, "request.body.stars should be <= 5")
 
-  await sendPostRequest(t, `service/1/ratings`, requestBody, 400, "request.body.stars should be <= 5");
+  await sendPostRequest(t, `service/1/ratings`, requestBody, expectedResponse);
 });
 
 /**
@@ -108,8 +109,9 @@ test("createRating - Client does not exist", async (t) => {
     stars: 4,
     review: "Great service!",
   };
+  expectedResponse = respondWithCode(404, "No client found with clientId: 999")
 
-  await sendPostRequest(t, `service/1/ratings`, requestBody, 404, "No client found with clientId: 999");
+  await sendPostRequest(t, `service/1/ratings`, requestBody, expectedResponse);
 });
 
 /**
@@ -123,8 +125,9 @@ test("createRating - clientId not an integer", async (t) => {
     stars: 5,
     review: "Excellent service!",
   };
+  expectedResponse = respondWithCode(400, "request.body.clientId should be integer")
 
-  await sendPostRequest(t, `service/1/ratings`, requestBody, 400, "request.body.clientId should be integer");
+  await sendPostRequest(t, `service/1/ratings`, requestBody, expectedResponse);
 });
 
 /**
@@ -137,8 +140,8 @@ test("createRating - clientId not provided", async (t) => {
     stars: 5,
     review: "Excellent service!",
   };
-
-  await sendPostRequest(t, `service/1/ratings`, requestBody, 400, "request.body should have required property 'clientId'");
+  expectedResponse = respondWithCode(400, "request.body should have required property 'clientId'")
+  await sendPostRequest(t, `service/1/ratings`, requestBody, expectedResponse);
 });
 
 /**
@@ -152,8 +155,8 @@ test("createRating - Service does not exist", async (t) => {
     stars: 5,
     review: "Excellent service!",
   };
-
-  await sendPostRequest(t, `service/999/ratings`, requestBody, 404, "No service found with serviceId: 999");
+  expectedResponse = respondWithCode(404, "No service found with serviceId: 999")
+  await sendPostRequest(t, `service/999/ratings`, requestBody, expectedResponse);
 });
 
 /**
@@ -167,8 +170,8 @@ test("createRating - serviceId not an integer", async (t) => {
     stars: 5,
     review: "Excellent service!",
   };
-
-  await sendPostRequest(t, `service/one/ratings`, requestBody, 400, "request.params.serviceId should be integer, request.body.serviceId should be integer");
+  expectedResponse = respondWithCode(400, "request.params.serviceId should be integer, request.body.serviceId should be integer")
+  await sendPostRequest(t, `service/one/ratings`, requestBody, expectedResponse);
 });
 
 /**
@@ -181,6 +184,6 @@ test("createRating - serviceId not provided", async (t) => {
     stars: 5,
     review: "Excellent service!",
   };
-
-  await sendPostRequest(t, `service/undefined/ratings`, requestBody, 400, "request.params.serviceId should be integer, request.body should have required property 'serviceId'");
+  expectedResponse = respondWithCode(400, "request.params.serviceId should be integer, request.body should have required property 'serviceId'")
+  await sendPostRequest(t, `service/undefined/ratings`, requestBody, expectedResponse);
 });
