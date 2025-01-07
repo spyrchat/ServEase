@@ -1,5 +1,23 @@
 "use strict";
 const { respondWithCode } = require("../utils/writer");
+// Reusable function to get the list of required fields
+
+function getRequiredFields() {
+  return [
+    "userType",
+    "serviceType",
+    "description",
+    "city",
+    "address",
+    "country",
+    "postalCode",
+    "email",
+    "phone",
+    "rating",
+    "serviceImg",
+    "availableTimeSlots",
+  ];
+}
 
 let services = [
   {
@@ -87,20 +105,7 @@ exports.createService = function (body) {
       }
 
       // Check if body exists and has the required properties
-      const requiredFields = [
-        "userType",
-        "serviceType",
-        "description",
-        "city",
-        "address",
-        "country",
-        "postalCode",
-        "email",
-        "phone",
-        "rating",
-        "serviceImg",
-        "availableTimeSlots",
-      ];
+      const requiredFields = getRequiredFields();
 
       // Validate required fields
       for (const field of requiredFields) {
@@ -232,20 +237,7 @@ exports.editService = function (body, serviceId) {
       }
 
       // Check if body exists and has the required properties
-      const requiredFields = [
-        "userType",
-        "serviceType",
-        "description",
-        "city",
-        "address",
-        "country",
-        "postalCode",
-        "email",
-        "phone",
-        "rating",
-        "serviceImg",
-        "availableTimeSlots",
-      ];
+      const requiredFields = getRequiredFields();
 
       // Validate required fields
       const missingFields = requiredFields.filter((field) => !body[field]);
