@@ -36,8 +36,6 @@ To set up the project locally:
    ```bash
    git clone https://github.com/spyrchat/ServEase.git
    cd ServEase
-   
 3. **Start the application:**:
    ```bash
     npm start
-```
