@@ -39,3 +39,5 @@ To set up the project locally:
 3. **Start the application:**:
    ```bash
     npm start
+
+   .
